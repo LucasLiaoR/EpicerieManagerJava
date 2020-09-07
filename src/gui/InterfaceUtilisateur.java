@@ -19,7 +19,7 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.LineBorder;
 import java.awt.SystemColor;
 
-public class InterfaceUtilisateur {
+public class InterfaceUtilisateur implements Runnable {
 
 	private JFrame frame;
 	private final JPanel TopPanel = new JPanel();
@@ -29,20 +29,13 @@ public class InterfaceUtilisateur {
 	private JPanel MenuPrincipal;
 	private JLabel lblNewLabel;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					InterfaceUtilisateur window = new InterfaceUtilisateur();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	public void run() {
+		try {
+			InterfaceUtilisateur window = new InterfaceUtilisateur();
+			window.frame.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -64,20 +57,19 @@ public class InterfaceUtilisateur {
 		TopPanel.setBounds(0, 0, 1032, 39);
 		frame.getContentPane().add(TopPanel);
 		TopPanel.setLayout(null);
-		
+
 		dateHeure = new JTextField();
 		dateHeure.setEditable(false);
 		dateHeure.setBounds(10, 11, 164, 18);
 		TopPanel.add(dateHeure);
 		dateHeure.setColumns(10);
-		
+
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		
+
 		Date date = new Date();
-		
-		
+
 		dateHeure.setText(date.toString());
-		
+
 		headText = new JTextField();
 		headText.setEditable(false);
 		headText.setFont(new Font("Tahoma", Font.BOLD, 11));
@@ -85,19 +77,19 @@ public class InterfaceUtilisateur {
 		headText.setColumns(10);
 		headText.setBounds(413, 11, 275, 18);
 		TopPanel.add(headText);
-		
+
 		LeftPanel = new JPanel();
 		LeftPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		LeftPanel.setBounds(0, 38, 182, 512);
 		frame.getContentPane().add(LeftPanel);
 		LeftPanel.setLayout(null);
-		
+
 		MenuPrincipal = new JPanel();
 		MenuPrincipal.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
 		MenuPrincipal.setBounds(10, 11, 162, 154);
 		LeftPanel.add(MenuPrincipal);
 		MenuPrincipal.setLayout(null);
-		
+
 		lblNewLabel = new JLabel("Menu Principal");
 		lblNewLabel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		lblNewLabel.setForeground(SystemColor.desktop);
