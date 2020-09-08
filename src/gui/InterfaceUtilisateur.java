@@ -1,27 +1,24 @@
 package gui;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Font;
+import java.awt.Insets;
+import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import javax.swing.JScrollBar;
-import javax.swing.JScrollPane;
-import javax.swing.border.MatteBorder;
-import java.awt.Color;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.LineBorder;
-import java.awt.SystemColor;
 import javax.swing.JButton;
-import javax.swing.JList;
-import javax.swing.JTextArea;
-import java.awt.Insets;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 
 public class InterfaceUtilisateur implements Runnable {
 
@@ -32,6 +29,12 @@ public class InterfaceUtilisateur implements Runnable {
 	private JPanel LeftPanel;
 	private JPanel panelGestionStock;
 	private JLabel lblNewLabel;
+	private JLayeredPane PanelsStack;
+	private JPanel panelAjouterProduit;
+	private JPanel panelModifierQuantiteStock;
+	private JPanel panelCreerNouveauTicket;
+	private JPanel panelParcourirFichierClient;
+	private JPanel panelAjouterNouveauClient;
 
 	public void run() {
 		try {
@@ -82,6 +85,26 @@ public class InterfaceUtilisateur implements Runnable {
 		headText.setColumns(10);
 		headText.setBounds(433, 11, 275, 18);
 		TopPanel.add(headText);
+		
+		PanelsStack = new JLayeredPane();
+		PanelsStack.setBounds(181, 38, 851, 512);
+		frmAjoutDunNouveau.getContentPane().add(PanelsStack);
+		PanelsStack.setLayout(new CardLayout(0, 0));
+		
+		panelAjouterProduit = new AjoutProduitPanel().getPanel();
+		PanelsStack.add(panelAjouterProduit, "name_6306658276400");
+		
+		panelModifierQuantiteStock = new ModificationQuantiteStockPanel().getPanel();
+		PanelsStack.add(panelModifierQuantiteStock, "name_6306670600200");
+		
+		panelCreerNouveauTicket = new CreationNouveauTicketPanel().getPanel();
+		PanelsStack.add(panelCreerNouveauTicket, "name_6306682648400");
+		
+		panelParcourirFichierClient = new AffichageFichierClientPanel().getPanel();
+		PanelsStack.add(panelParcourirFichierClient, "name_6306694792400");
+		
+		panelAjouterNouveauClient = new AjoutClientPanel().getPanel();
+		PanelsStack.add(panelAjouterNouveauClient, "name_6306706746800");
 
 		LeftPanel = new JPanel();
 		LeftPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -105,11 +128,21 @@ public class InterfaceUtilisateur implements Runnable {
 		panelGestionStock.add(lblNewLabel);
 		
 		JButton btnAjouterProduit = new JButton("Ajouter un produit");
+		btnAjouterProduit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				switchPanels(panelAjouterProduit);
+			}
+		});
 		btnAjouterProduit.setMargin(new Insets(2, 2, 2, 2));
 		btnAjouterProduit.setBounds(10, 41, 142, 30);
 		panelGestionStock.add(btnAjouterProduit);
 		
 		JButton btnModifierQuantite = new JButton("Modifier quantit\u00E9 stock");
+		btnModifierQuantite.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				switchPanels(panelModifierQuantiteStock);
+			}
+		});
 		btnModifierQuantite.setMargin(new Insets(2, 2, 2, 2));
 		btnModifierQuantite.setBounds(10, 76, 142, 31);
 		panelGestionStock.add(btnModifierQuantite);
@@ -130,6 +163,11 @@ public class InterfaceUtilisateur implements Runnable {
 		panelGestionCaisse.add(lblVentes);
 		
 		JButton btnCreerNewTicket = new JButton("Cr\u00E9er nouveau ticket");
+		btnCreerNewTicket.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				switchPanels(panelCreerNouveauTicket);
+			}
+		});
 		btnCreerNewTicket.setMargin(new Insets(2, 2, 2, 2));
 		btnCreerNewTicket.setBounds(10, 41, 142, 30);
 		panelGestionCaisse.add(btnCreerNewTicket);
@@ -150,16 +188,30 @@ public class InterfaceUtilisateur implements Runnable {
 		panelGestionClientele.add(lblGestionFichierClient);
 		
 		JButton btnParcourirFichierClient = new JButton("Parcourir fichier client");
+		btnParcourirFichierClient.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				switchPanels(panelParcourirFichierClient);
+			}
+		});
 		btnParcourirFichierClient.setMargin(new Insets(2, 2, 2, 2));
 		btnParcourirFichierClient.setBounds(10, 41, 142, 30);
 		panelGestionClientele.add(btnParcourirFichierClient);
 		
 		JButton btnAjouterUnNouveau = new JButton("Ajouter nouveau client");
+		btnAjouterUnNouveau.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				switchPanels(panelAjouterNouveauClient);
+			}
+		});
 		btnAjouterUnNouveau.setMargin(new Insets(2, 2, 2, 2));
 		btnAjouterUnNouveau.setBounds(10, 77, 142, 30);
 		panelGestionClientele.add(btnAjouterUnNouveau);
-		
-		JPanel panelAjouterProduit = new AjoutProduitPanel().getPanel();
-		frmAjoutDunNouveau.getContentPane().add(panelAjouterProduit);
+	}
+	
+	public void switchPanels(JPanel panel) {
+		PanelsStack.removeAll();
+		PanelsStack.add(panel);
+		PanelsStack.repaint();
+		PanelsStack.revalidate();
 	}
 }
