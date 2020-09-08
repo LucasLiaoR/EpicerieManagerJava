@@ -21,25 +21,22 @@ import java.awt.SystemColor;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JTextArea;
+import java.awt.Insets;
 
 public class InterfaceUtilisateur implements Runnable {
 
-	private JFrame frame;
+	private JFrame frmAjoutDunNouveau;
 	private final JPanel TopPanel = new JPanel();
 	private JTextField dateHeure;
 	private JTextField headText;
 	private JPanel LeftPanel;
 	private JPanel panelGestionStock;
 	private JLabel lblNewLabel;
-	private JTextField AjoutProduit_NomProduit;
-	private JTextField AjoutProduit_IDProduit;
-	private JTextField AjoutProduit_Statut;
-	private JTextField AjoutProduit_PrixVente;
 
 	public void run() {
 		try {
 			InterfaceUtilisateur window = new InterfaceUtilisateur();
-			window.frame.setVisible(true);
+			window.frmAjoutDunNouveau.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -56,13 +53,14 @@ public class InterfaceUtilisateur implements Runnable {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 1048, 589);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
+		frmAjoutDunNouveau = new JFrame();
+		frmAjoutDunNouveau.setTitle("Epicerie Manager");
+		frmAjoutDunNouveau.setBounds(100, 100, 1048, 589);
+		frmAjoutDunNouveau.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmAjoutDunNouveau.getContentPane().setLayout(null);
 		TopPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		TopPanel.setBounds(0, 0, 1032, 39);
-		frame.getContentPane().add(TopPanel);
+		frmAjoutDunNouveau.getContentPane().add(TopPanel);
 		TopPanel.setLayout(null);
 
 		dateHeure = new JTextField();
@@ -88,7 +86,7 @@ public class InterfaceUtilisateur implements Runnable {
 		LeftPanel = new JPanel();
 		LeftPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		LeftPanel.setBounds(0, 38, 182, 512);
-		frame.getContentPane().add(LeftPanel);
+		frmAjoutDunNouveau.getContentPane().add(LeftPanel);
 		LeftPanel.setLayout(null);
 
 		panelGestionStock = new JPanel();
@@ -107,10 +105,12 @@ public class InterfaceUtilisateur implements Runnable {
 		panelGestionStock.add(lblNewLabel);
 		
 		JButton btnAjouterProduit = new JButton("Ajouter un produit");
+		btnAjouterProduit.setMargin(new Insets(2, 2, 2, 2));
 		btnAjouterProduit.setBounds(10, 41, 142, 30);
 		panelGestionStock.add(btnAjouterProduit);
 		
 		JButton btnModifierQuantite = new JButton("Modifier quantit\u00E9 stock");
+		btnModifierQuantite.setMargin(new Insets(2, 2, 2, 2));
 		btnModifierQuantite.setBounds(10, 76, 142, 31);
 		panelGestionStock.add(btnModifierQuantite);
 		
@@ -130,6 +130,7 @@ public class InterfaceUtilisateur implements Runnable {
 		panelGestionCaisse.add(lblVentes);
 		
 		JButton btnCreerNewTicket = new JButton("Cr\u00E9er nouveau ticket");
+		btnCreerNewTicket.setMargin(new Insets(2, 2, 2, 2));
 		btnCreerNewTicket.setBounds(10, 41, 142, 30);
 		panelGestionCaisse.add(btnCreerNewTicket);
 		
@@ -149,92 +150,16 @@ public class InterfaceUtilisateur implements Runnable {
 		panelGestionClientele.add(lblGestionFichierClient);
 		
 		JButton btnParcourirFichierClient = new JButton("Parcourir fichier client");
+		btnParcourirFichierClient.setMargin(new Insets(2, 2, 2, 2));
 		btnParcourirFichierClient.setBounds(10, 41, 142, 30);
 		panelGestionClientele.add(btnParcourirFichierClient);
 		
 		JButton btnAjouterUnNouveau = new JButton("Ajouter nouveau client");
+		btnAjouterUnNouveau.setMargin(new Insets(2, 2, 2, 2));
 		btnAjouterUnNouveau.setBounds(10, 77, 142, 30);
 		panelGestionClientele.add(btnAjouterUnNouveau);
 		
-		JPanel panelAjouterProduit = new JPanel();
-		panelAjouterProduit.setBounds(181, 38, 851, 512);
-		frame.getContentPane().add(panelAjouterProduit);
-		panelAjouterProduit.setLayout(null);
-		
-		AjoutProduit_NomProduit = new JTextField();
-		AjoutProduit_NomProduit.setBounds(200, 103, 591, 27);
-		panelAjouterProduit.add(AjoutProduit_NomProduit);
-		AjoutProduit_NomProduit.setColumns(10);
-		
-		JLabel lblNewLabel_1 = new JLabel("Nom du produit");
-		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblNewLabel_1.setBounds(10, 102, 163, 27);
-		panelAjouterProduit.add(lblNewLabel_1);
-		
-		JLabel lblIdProduit = new JLabel("ID produit");
-		lblIdProduit.setHorizontalAlignment(SwingConstants.CENTER);
-		lblIdProduit.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblIdProduit.setBounds(10, 140, 163, 27);
-		panelAjouterProduit.add(lblIdProduit);
-		
-		AjoutProduit_IDProduit = new JTextField();
-		AjoutProduit_IDProduit.setColumns(10);
-		AjoutProduit_IDProduit.setBounds(200, 141, 591, 27);
-		panelAjouterProduit.add(AjoutProduit_IDProduit);
-		
-		JLabel lblNewLabel_2 = new JLabel("Ajout d'un nouveau produit");
-		lblNewLabel_2.setBorder(new LineBorder(new Color(0, 0, 0)));
-		lblNewLabel_2.setFont(new Font("Tahoma", Font.ITALIC, 16));
-		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_2.setBounds(325, 26, 239, 48);
-		panelAjouterProduit.add(lblNewLabel_2);
-		
-		JLabel lblCatgorie = new JLabel("Cat\u00E9gorie");
-		lblCatgorie.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCatgorie.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblCatgorie.setBounds(10, 178, 163, 27);
-		panelAjouterProduit.add(lblCatgorie);
-		
-		JList AjoutProduit_ListeCategorie = new JList();
-		AjoutProduit_ListeCategorie.setBounds(200, 179, 591, 26);
-		panelAjouterProduit.add(AjoutProduit_ListeCategorie);
-		
-		JLabel lblStatut = new JLabel("Statut");
-		lblStatut.setHorizontalAlignment(SwingConstants.CENTER);
-		lblStatut.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblStatut.setBounds(10, 216, 163, 27);
-		panelAjouterProduit.add(lblStatut);
-		
-		AjoutProduit_Statut = new JTextField();
-		AjoutProduit_Statut.setColumns(10);
-		AjoutProduit_Statut.setBounds(200, 216, 591, 27);
-		panelAjouterProduit.add(AjoutProduit_Statut);
-		
-		JLabel lblDescription = new JLabel("Description");
-		lblDescription.setHorizontalAlignment(SwingConstants.CENTER);
-		lblDescription.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblDescription.setBounds(10, 254, 163, 27);
-		panelAjouterProduit.add(lblDescription);
-		
-		JTextArea AjoutProduit_Desc = new JTextArea();
-		AjoutProduit_Desc.setBounds(200, 254, 591, 102);
-		panelAjouterProduit.add(AjoutProduit_Desc);
-		
-		JLabel lblPrixDeVente = new JLabel("Prix de vente");
-		lblPrixDeVente.setHorizontalAlignment(SwingConstants.CENTER);
-		lblPrixDeVente.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblPrixDeVente.setBounds(10, 394, 163, 27);
-		panelAjouterProduit.add(lblPrixDeVente);
-		
-		AjoutProduit_PrixVente = new JTextField();
-		AjoutProduit_PrixVente.setBounds(200, 392, 591, 32);
-		panelAjouterProduit.add(AjoutProduit_PrixVente);
-		AjoutProduit_PrixVente.setColumns(10);
-		
-		JButton btnNewButton = new JButton("Ajouter le produit");
-		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnNewButton.setBounds(553, 437, 271, 52);
-		panelAjouterProduit.add(btnNewButton);
+		JPanel panelAjouterProduit = new AjoutProduitPanel().getPanel();
+		frmAjoutDunNouveau.getContentPane().add(panelAjouterProduit);
 	}
 }
