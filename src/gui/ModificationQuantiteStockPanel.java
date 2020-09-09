@@ -2,12 +2,18 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.JTextField;
+import javax.swing.ListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JTable;
@@ -19,8 +25,13 @@ public class ModificationQuantiteStockPanel {
 	private JTextField ModifierQuantiteProduitPrix;
 	private JTable jTableQuantitePrix;
 	
+	private static String[] testListe = {"Ail", "Pomme Rouge", "Pomme Golden", "Tomate", "Pomme de terre"};
+	
+	private static String[] resultatRecherche = {"Ail", "Pomme Rouge", "Pomme Golden", "Tomate", "Pomme de terre"};
+	
 	public ModificationQuantiteStockPanel ()
 	{
+	
 		panel = new JPanel();
 		panel.setBounds(181, 38, 851, 512);
 		panel.setLayout(null);
@@ -70,13 +81,43 @@ public class ModificationQuantiteStockPanel {
 		btnNewButton.setBounds(592, 426, 235, 56);
 		panel.add(btnNewButton);
 		
-		JList listeProduitRecherche = new JList();
+		JList listeProduitRecherche = new JList(resultatRecherche);
 		listeProduitRecherche.setBorder(new LineBorder(new Color(0, 0, 0)));
 		listeProduitRecherche.setBounds(23, 219, 497, 122);
+		listeProduitRecherche.setVisibleRowCount(5);
 		panel.add(listeProduitRecherche);
 		
 		JButton btnNewButton_1 = new JButton("Rechercher produit");
 		btnNewButton_1.setBounds(85, 153, 145, 41);
+		btnNewButton_1.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String champRecherche = ModifQuantiteProduit_NomID.getText();
+				Pattern pattern = Pattern.compile(champRecherche, Pattern.CASE_INSENSITIVE);
+				Matcher matcher;
+				boolean matchFound;
+				int j = 0;
+				
+				for (int i = 0; i<testListe.length; i++)
+				{
+					resultatRecherche[i] = "";
+				}
+				
+				for (int i = 0; i<testListe.length; i++)
+				{
+					matcher = pattern.matcher(testListe[i]);
+					matchFound = matcher.find();
+					if (matchFound)
+					{
+						resultatRecherche[j] = testListe[i];
+						j++;
+					}
+						
+				}
+				
+				listeProduitRecherche.updateUI();
+			}
+		});
 		panel.add(btnNewButton_1);
 		
 		JButton button = new JButton("Reinitialiser recherche");
