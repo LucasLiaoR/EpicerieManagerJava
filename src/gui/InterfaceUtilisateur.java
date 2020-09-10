@@ -21,6 +21,8 @@ import javax.swing.Timer;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
+import database.Utilisateurs;
+
 public class InterfaceUtilisateur implements Runnable {
 
 	private JFrame frmAjoutDunNouveau;
@@ -36,10 +38,11 @@ public class InterfaceUtilisateur implements Runnable {
 	private JPanel panelCreerNouveauTicket;
 	private JPanel panelParcourirFichierClient;
 	private JPanel panelAjouterNouveauClient;
+	private Utilisateurs user;
 	
 	public void run() {
 		try {
-			InterfaceUtilisateur window = new InterfaceUtilisateur();
+			InterfaceUtilisateur window = new InterfaceUtilisateur(user);
 			window.frmAjoutDunNouveau.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -49,7 +52,8 @@ public class InterfaceUtilisateur implements Runnable {
 	/**
 	 * Create the application.
 	 */
-	public InterfaceUtilisateur() {
+	public InterfaceUtilisateur(Utilisateurs u) {
+		this.user = u;
 		initialize();
 	}
 
@@ -101,14 +105,18 @@ public class InterfaceUtilisateur implements Runnable {
 		headText.setBounds(257, 11, 275, 18);
 		TopPanel.add(headText);
 		
-		JLabel labelUtilisateurCo = new JLabel("  Utilisateur connect\u00E9 : ");
+		JLabel labelUtilisateurCo = new JLabel("Utilisateur connect\u00E9 : ");
+		labelUtilisateurCo.setHorizontalAlignment(SwingConstants.CENTER);
 		labelUtilisateurCo.setBorder(new LineBorder(new Color(0, 0, 0)));
-		labelUtilisateurCo.setBounds(824, 0, 208, 39);
+		labelUtilisateurCo.setBounds(757, 0, 275, 39);
+		labelUtilisateurCo.setText("Utilisateur connecté : " + getUser().getPrenom() + " - " + getUser().getNom());
 		TopPanel.add(labelUtilisateurCo);
 		
-		JLabel lblNumroDeCaisse = new JLabel("  Num\u00E9ro de caisse :");
+		JLabel lblNumroDeCaisse = new JLabel("Num\u00E9ro de caisse :");
+		lblNumroDeCaisse.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNumroDeCaisse.setBorder(new LineBorder(new Color(0, 0, 0)));
-		lblNumroDeCaisse.setBounds(669, 0, 155, 39);
+		lblNumroDeCaisse.setBounds(624, 0, 134, 39);
+		lblNumroDeCaisse.setText("Num\u00E9ro de caisse : 0");
 		TopPanel.add(lblNumroDeCaisse);
 		
 		PanelsStack = new JLayeredPane();
@@ -241,6 +249,11 @@ public class InterfaceUtilisateur implements Runnable {
 		PanelsStack.add(panel);
 		PanelsStack.repaint();
 		PanelsStack.revalidate();
+	}
+	
+	public Utilisateurs getUser()
+	{
+		return user;
 	}
 	
 	

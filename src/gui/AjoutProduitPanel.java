@@ -12,6 +12,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.UIManager;
+import javax.swing.JComboBox;
 
 public class AjoutProduitPanel {
 	
@@ -63,10 +64,6 @@ public class AjoutProduitPanel {
 		lblCatgorie.setBounds(10, 152, 163, 27);
 		panelAjouterProduit.add(lblCatgorie);
 		
-		JList AjoutProduit_ListeCategorie = new JList();
-		AjoutProduit_ListeCategorie.setBounds(200, 153, 591, 26);
-		panelAjouterProduit.add(AjoutProduit_ListeCategorie);
-		
 		JLabel lblStatut = new JLabel("Statut");
 		lblStatut.setHorizontalAlignment(SwingConstants.CENTER);
 		lblStatut.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -115,6 +112,10 @@ public class AjoutProduitPanel {
 		textField.setColumns(10);
 		textField.setBounds(200, 363, 591, 32);
 		panelAjouterProduit.add(textField);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setBounds(200, 153, 591, 27);
+		panelAjouterProduit.add(comboBox);
 	}
 	
 	public JPanel getPanel() {

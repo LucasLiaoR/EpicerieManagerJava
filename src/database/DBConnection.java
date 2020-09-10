@@ -12,8 +12,6 @@ import java.util.ArrayList;
 
 import org.apache.ibatis.jdbc.ScriptRunner;
 
-import MVC.Utilisateur;
-
 public class DBConnection {
 
 	private final static String DATABASE_NAME = "epicerie_manager";
@@ -65,31 +63,5 @@ public class DBConnection {
 		cnx.close();
 	}
 	
-	public static ArrayList<Utilisateur> getListeUserDatabase(ArrayList<Utilisateur> listUser)
-	{
-		Connection cnx = ConnectToDatabase();
-		
-		try {
-			Statement st = cnx.createStatement();
-			
-			ResultSet r = st.executeQuery("SELECT * FROM Utilisateurs");
-			
-			while (r.next())
-			{
-				int id = r.getInt("utls_id");
-				String nom = r.getString("utls_nom");
-				String prenom = r.getString("utls_prenom");
-				String mdp = r.getString("utls_mdp");
-				
-				Utilisateur user = new Utilisateur(id, nom, prenom, mdp);
-				listUser.add(user);
-			}
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return listUser;
-	}
+	
 }
