@@ -2,7 +2,6 @@
 #        Script MySQL.
 #------------------------------------------------------------
 
-
 #------------------------------------------------------------
 # Table: Utilisateurs
 #------------------------------------------------------------
@@ -84,3 +83,8 @@ CREATE TABLE IF NOT EXISTS Tickets_Produits(
 	,CONSTRAINT Tickets_Produits_Produits0_FK FOREIGN KEY (prod_id) REFERENCES Produits(prod_id) ON DELETE CASCADE ON UPDATE CASCADE
 )ENGINE=InnoDB;
 
+#------------------------------------------------------------
+# Insertion du premier utilisateur root pour le premier démarrage
+#------------------------------------------------------------
+
+REPLACE INTO Utilisateurs(utls_id ,utls_nom, utls_prenom, utls_telephone, utls_mail, utls_adresse, utls_mdp, utls_caisse, utls_manager) VALUES (1, "root", "root", "", "", "", "root", 0, true);

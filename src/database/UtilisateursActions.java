@@ -35,7 +35,7 @@ public class UtilisateursActions {
 
 			Statement st = cnx.createStatement();
 
-			// Recuperer et ajouter toutes les utilisateurs
+			// Recuperer et ajouter tous les utilisateurs
 			ResultSet resUtilisateurs = st.executeQuery("SELECT * FROM utilisateurs");
 			while (resUtilisateurs.next()) {
 				String nom = resUtilisateurs.getString("utls_nom");
