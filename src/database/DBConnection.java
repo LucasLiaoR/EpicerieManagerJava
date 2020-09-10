@@ -21,6 +21,7 @@ public class DBConnection {
 			Connection cnx = DriverManager.getConnection("jdbc:mysql://localhost/", DATABASE_USER, DATABASE_PASSWORD);
 			Statement st = cnx.createStatement();
 			st.executeUpdate("CREATE DATABASE IF NOT EXISTS " + DATABASE_NAME + " CHARACTER SET utf8 COLLATE utf8_general_ci;");
+			cnx.close();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -55,5 +56,7 @@ public class DBConnection {
 
 		// Executer le script
 		sr.runScript(reader);
+		
+		cnx.close();
 	}
 }
