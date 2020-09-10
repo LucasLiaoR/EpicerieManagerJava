@@ -105,16 +105,18 @@ public class InterfaceUtilisateur implements Runnable {
 		headText.setBounds(257, 11, 275, 18);
 		TopPanel.add(headText);
 		
-		JLabel labelUtilisateurCo = new JLabel("  Utilisateur connect\u00E9 : ");
+		JLabel labelUtilisateurCo = new JLabel("Utilisateur connect\u00E9 : ");
+		labelUtilisateurCo.setHorizontalAlignment(SwingConstants.CENTER);
 		labelUtilisateurCo.setBorder(new LineBorder(new Color(0, 0, 0)));
 		labelUtilisateurCo.setBounds(757, 0, 275, 39);
-		labelUtilisateurCo.setText("  Utilisateur connecté : " + getUser().getPrenom() + " - " + getUser().getNom());
+		labelUtilisateurCo.setText("Utilisateur connecté : " + getUser().getPrenom() + " - " + getUser().getNom());
 		TopPanel.add(labelUtilisateurCo);
 		
-		JLabel lblNumroDeCaisse = new JLabel("  Num\u00E9ro de caisse :");
+		JLabel lblNumroDeCaisse = new JLabel("Num\u00E9ro de caisse :");
+		lblNumroDeCaisse.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNumroDeCaisse.setBorder(new LineBorder(new Color(0, 0, 0)));
 		lblNumroDeCaisse.setBounds(624, 0, 134, 39);
-		lblNumroDeCaisse.setText("  Numéro de caisse : " + 0);
+		lblNumroDeCaisse.setText("Num\u00E9ro de caisse : 0");
 		TopPanel.add(lblNumroDeCaisse);
 		
 		PanelsStack = new JLayeredPane();
