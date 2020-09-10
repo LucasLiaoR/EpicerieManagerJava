@@ -18,7 +18,8 @@ public class Main {
 		}
 		
 		// Lancer l'application
-		SwingUtilities.invokeLater(new InterfaceUtilisateur()); 
+		SwingUtilities.invokeLater(new SelectUserFrame()); 
+		//SwingUtilities.invokeLater(new InterfaceUtilisateur()); 
 	}
 
 }

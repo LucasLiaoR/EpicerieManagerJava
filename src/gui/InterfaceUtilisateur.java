@@ -8,7 +8,6 @@ import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.JButton;
@@ -37,7 +36,7 @@ public class InterfaceUtilisateur implements Runnable {
 	private JPanel panelCreerNouveauTicket;
 	private JPanel panelParcourirFichierClient;
 	private JPanel panelAjouterNouveauClient;
-
+	
 	public void run() {
 		try {
 			InterfaceUtilisateur window = new InterfaceUtilisateur();
@@ -57,13 +56,10 @@ public class InterfaceUtilisateur implements Runnable {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	
-	public static int j;
-	
+
 	public void ticktock()
 	{
 		dateHeure.setText(DateFormat.getDateTimeInstance().format(new Date()));
-		System.out.println(j++);
 	}
 	
 	private void initialize() {
@@ -135,6 +131,7 @@ public class InterfaceUtilisateur implements Runnable {
 		panelAjouterNouveauClient = new AjoutUtilisateurPanel().getPanel();
 		PanelsStack.add(panelAjouterNouveauClient, "name_6306706746800");
 
+		
 		LeftPanel = new JPanel();
 		LeftPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		LeftPanel.setBounds(0, 38, 182, 512);
@@ -156,7 +153,7 @@ public class InterfaceUtilisateur implements Runnable {
 		lblNewLabel.setBounds(0, 0, 162, 30);
 		panelGestionStock.add(lblNewLabel);
 		
-		JButton btnAjouterProduit = new JButton("Ajouter un produit");
+		JButton btnAjouterProduit = new JButton("Ajouter produit");
 		btnAjouterProduit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				switchPanels(panelAjouterProduit);
@@ -216,7 +213,7 @@ public class InterfaceUtilisateur implements Runnable {
 		lblGestionFichierClient.setBounds(0, 0, 162, 30);
 		panelGestionClientele.add(lblGestionFichierClient);
 		
-		JButton btnParcourirFichierClient = new JButton("Parcourir fichier utilisateur");
+		JButton btnParcourirFichierClient = new JButton("Changer d'utilisateur");
 		btnParcourirFichierClient.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				switchPanels(panelParcourirFichierClient);
@@ -226,7 +223,7 @@ public class InterfaceUtilisateur implements Runnable {
 		btnParcourirFichierClient.setBounds(10, 41, 142, 30);
 		panelGestionClientele.add(btnParcourirFichierClient);
 		
-		JButton btnAjouterUnNouveau = new JButton("Ajouter nouvel utilisateur");
+		JButton btnAjouterUnNouveau = new JButton("Ajouter utilisateur");
 		btnAjouterUnNouveau.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				switchPanels(panelAjouterNouveauClient);
@@ -235,6 +232,8 @@ public class InterfaceUtilisateur implements Runnable {
 		btnAjouterUnNouveau.setMargin(new Insets(2, 2, 2, 2));
 		btnAjouterUnNouveau.setBounds(10, 77, 142, 30);
 		panelGestionClientele.add(btnAjouterUnNouveau);
+		
+
 	}
 	
 	public void switchPanels(JPanel panel) {
