@@ -11,6 +11,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
+import javax.swing.UIManager;
 
 public class AjoutProduitPanel {
 	
@@ -84,6 +85,7 @@ public class AjoutProduitPanel {
 		panelAjouterProduit.add(lblDescription);
 		
 		JTextArea AjoutProduit_Desc = new JTextArea();
+		AjoutProduit_Desc.setBorder(UIManager.getBorder("FileChooser.listViewBorder"));
 		AjoutProduit_Desc.setBounds(200, 228, 591, 124);
 		panelAjouterProduit.add(AjoutProduit_Desc);
 		

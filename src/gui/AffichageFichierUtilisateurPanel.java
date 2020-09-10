@@ -12,26 +12,26 @@ import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JTable;
 
-public class AffichageFichierClientPanel {
+public class AffichageFichierUtilisateurPanel {
 	private JPanel panel;
 	private JTextField textField;
 	private JTextField textField_1;
 	private JTable table;
 	
-	public AffichageFichierClientPanel ()
+	public AffichageFichierUtilisateurPanel ()
 	{
 		panel = new JPanel();
 		panel.setBounds(181, 38, 851, 512);
 		panel.setLayout(null);
 		
-		JLabel lblNewLabel_1 = new JLabel("Parcourir le fichier client");
+		JLabel lblNewLabel_1 = new JLabel("Changer d'utilisateur");
 		lblNewLabel_1.setBorder(new LineBorder(new Color(0, 0, 0)));
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.ITALIC, 16));
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setBounds(325, 0, 239, 48);
 		panel.add(lblNewLabel_1);
 		
-		JLabel lblNewLabel = new JLabel("Nom \u00E0 rechercher");
+		JLabel lblNewLabel = new JLabel("Nom utilisateur");
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setBounds(10, 59, 163, 30);
@@ -42,7 +42,7 @@ public class AffichageFichierClientPanel {
 		panel.add(textField);
 		textField.setColumns(10);
 		
-		JLabel lblPrnomRechercher = new JLabel("Pr\u00E9nom \u00E0 rechercher");
+		JLabel lblPrnomRechercher = new JLabel("ID utilisateur");
 		lblPrnomRechercher.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPrnomRechercher.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblPrnomRechercher.setBounds(10, 110, 163, 30);
@@ -53,7 +53,7 @@ public class AffichageFichierClientPanel {
 		textField_1.setBounds(183, 110, 320, 33);
 		panel.add(textField_1);
 		
-		JButton btnNewButton = new JButton("Rechercher le client");
+		JButton btnNewButton = new JButton("Rechercher un utilisateur");
 		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		btnNewButton.setBounds(320, 164, 183, 30);
 		panel.add(btnNewButton);
@@ -70,11 +70,11 @@ public class AffichageFichierClientPanel {
 		table.setBounds(527, 80, 314, 347);
 		panel.add(table);
 		
-		JLabel lblNewLabel_3 = new JLabel("Fiche client");
+		JLabel lblNewLabel_3 = new JLabel("Fiche utilisateur");
 		lblNewLabel_3.setBounds(527, 59, 89, 14);
 		panel.add(lblNewLabel_3);
 		
-		JButton btnNewButton_1 = new JButton("Enregistrer les modifications");
+		JButton btnNewButton_1 = new JButton("Selectionner l'utilisateur");
 		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnNewButton_1.setBounds(578, 453, 263, 33);
 		panel.add(btnNewButton_1);

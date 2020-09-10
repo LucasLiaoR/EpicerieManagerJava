@@ -9,22 +9,24 @@ import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.JPasswordField;
 
-public class AjoutClientPanel {
+public class AjoutUtilisateurPanel {
 	private JPanel panel;
 	private JTextField nomTextField;
 	private JTextField prenomTextField;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
+	private JTextField textFieldTelephone;
+	private JTextField textField_Email;
+	private JTextField textField_Adresse;
+	private JPasswordField passwordField;
 	
-	public AjoutClientPanel ()
+	public AjoutUtilisateurPanel ()
 	{
 		panel = new JPanel();
 		panel.setBounds(181, 38, 851, 512);
 		panel.setLayout(null);
 		
-		JLabel lblNewLabel_1 = new JLabel("Ajout d'un nouveau client");
+		JLabel lblNewLabel_1 = new JLabel("Ajout d'un nouvel utilisateur");
 		lblNewLabel_1.setBorder(new LineBorder(new Color(0, 0, 0)));
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.ITALIC, 16));
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
@@ -59,10 +61,10 @@ public class AjoutClientPanel {
 		telLabel.setBounds(28, 186, 90, 16);
 		panel.add(telLabel);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(173, 181, 588, 29);
-		panel.add(textField);
+		textFieldTelephone = new JTextField();
+		textFieldTelephone.setColumns(10);
+		textFieldTelephone.setBounds(173, 181, 588, 29);
+		panel.add(textFieldTelephone);
 		
 		JLabel lblAdresseMail = new JLabel("Adresse mail");
 		lblAdresseMail.setHorizontalAlignment(SwingConstants.CENTER);
@@ -70,10 +72,10 @@ public class AjoutClientPanel {
 		lblAdresseMail.setBounds(28, 237, 97, 16);
 		panel.add(lblAdresseMail);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(173, 232, 588, 29);
-		panel.add(textField_1);
+		textField_Email = new JTextField();
+		textField_Email.setColumns(10);
+		textField_Email.setBounds(173, 232, 588, 29);
+		panel.add(textField_Email);
 		
 		JLabel lblAdresse = new JLabel("Adresse postale");
 		lblAdresse.setHorizontalAlignment(SwingConstants.CENTER);
@@ -81,15 +83,25 @@ public class AjoutClientPanel {
 		lblAdresse.setBounds(30, 289, 106, 16);
 		panel.add(lblAdresse);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(173, 284, 588, 29);
-		panel.add(textField_2);
+		textField_Adresse = new JTextField();
+		textField_Adresse.setColumns(10);
+		textField_Adresse.setBounds(173, 284, 588, 29);
+		panel.add(textField_Adresse);
 		
-		JButton ajouterClientBtn = new JButton("Ajouter le client");
+		JButton ajouterClientBtn = new JButton("Ajouter l'utilisateur");
 		ajouterClientBtn.setFont(new Font("Tahoma", Font.BOLD, 14));
-		ajouterClientBtn.setBounds(515, 371, 246, 58);
+		ajouterClientBtn.setBounds(577, 427, 246, 58);
 		panel.add(ajouterClientBtn);
+		
+		JLabel lblMotDePasse = new JLabel("Mot de passe");
+		lblMotDePasse.setHorizontalAlignment(SwingConstants.CENTER);
+		lblMotDePasse.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblMotDePasse.setBounds(28, 338, 106, 16);
+		panel.add(lblMotDePasse);
+		
+		passwordField = new JPasswordField();
+		passwordField.setBounds(173, 333, 588, 29);
+		panel.add(passwordField);
 	}
 	
 	public JPanel getPanel() {
