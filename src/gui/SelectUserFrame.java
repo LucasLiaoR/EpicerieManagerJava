@@ -6,8 +6,11 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import MVC.Utilisateur;
+import database.Utilisateurs;
 import database.DBConnection;
+import database.UtilisateursActions;
+
+
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -17,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -33,6 +37,7 @@ public class SelectUserFrame implements Runnable {
 	private JTextField fieldNom;
 	private JTextField fieldPrenom;
 	private JPasswordField passwordField;
+	private Utilisateurs user;
 
 	/**
 	 * Launch the application.
@@ -60,6 +65,9 @@ public class SelectUserFrame implements Runnable {
 	/**
 	 * Initialize the contents of the frame.
 	 */
+	
+	public static List<Utilisateurs> listeUserDB = new ArrayList<Utilisateurs>();
+	
 	private void initialize() {
 		frmSelectUser = new JFrame();
 		frmSelectUser.setTitle("Epicerie Manager");
@@ -67,21 +75,22 @@ public class SelectUserFrame implements Runnable {
 		frmSelectUser.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmSelectUser.getContentPane().setLayout(null);
 		
+		
+		
 		JButton btnNewButton = new JButton("Choisir cet utilisateur");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
 				boolean matchConnexion = false;
 				
-				ArrayList<Utilisateur> listeUserDB = new ArrayList<Utilisateur>();
-				
-				DBConnection.getListeUserDatabase(listeUserDB);
+				listeUserDB = UtilisateursActions.getUtilisateurs();
 
-				for (Utilisateur u : listeUserDB)
+				for (Utilisateurs u : listeUserDB)
 				{
 					if (fieldNom.getText().toString().equals(u.getNom()) && fieldPrenom.getText().toString().equals(u.getPrenom()) && String.copyValueOf(passwordField.getPassword()).toString().equals(u.getMdp()))
 					{
 						matchConnexion = true;
+						setUser(u);
 					}
 				}
 				
@@ -90,7 +99,7 @@ public class SelectUserFrame implements Runnable {
 				if (matchConnexion)
 				{
 					frmSelectUser.setVisible(false);
-					SwingUtilities.invokeLater(new InterfaceUtilisateur()); 
+					SwingUtilities.invokeLater(new InterfaceUtilisateur(user)); 
 				}
 				else
 				{
@@ -150,6 +159,16 @@ public class SelectUserFrame implements Runnable {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public void setUser(Utilisateurs u)
+	{
+		this.user = u;
+	}
+	
+	public Utilisateurs getUser()
+	{
+		return this.user;
 	}
 
 	
