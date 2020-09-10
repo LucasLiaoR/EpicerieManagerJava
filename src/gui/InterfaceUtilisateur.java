@@ -7,6 +7,7 @@ import java.awt.Insets;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -17,6 +18,7 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
@@ -55,6 +57,15 @@ public class InterfaceUtilisateur implements Runnable {
 	/**
 	 * Initialize the contents of the frame.
 	 */
+	
+	public static int j;
+	
+	public void ticktock()
+	{
+		dateHeure.setText(DateFormat.getDateTimeInstance().format(new Date()));
+		System.out.println(j++);
+	}
+	
 	private void initialize() {
 		frmAjoutDunNouveau = new JFrame();
 		frmAjoutDunNouveau.setTitle("Epicerie Manager");
@@ -67,24 +78,42 @@ public class InterfaceUtilisateur implements Runnable {
 		TopPanel.setLayout(null);
 
 		dateHeure = new JTextField();
+		dateHeure.setHorizontalAlignment(SwingConstants.CENTER);
 		dateHeure.setEditable(false);
 		dateHeure.setBounds(10, 11, 164, 18);
 		TopPanel.add(dateHeure);
 		dateHeure.setColumns(10);
-
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-
-		Date date = new Date();
-
-		dateHeure.setText(date.toString());
+		
+		Timer timer = new Timer(1000, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				ticktock();
+			}
+		});
+		
+		timer.setRepeats(true);
+        timer.setCoalesce(true);
+        timer.setInitialDelay(0);
+        timer.start();
 
 		headText = new JTextField();
 		headText.setEditable(false);
 		headText.setFont(new Font("Tahoma", Font.BOLD, 11));
 		headText.setText("Projet Java - Outil Caisse/Inventaire d'\u00E9picerie");
 		headText.setColumns(10);
-		headText.setBounds(433, 11, 275, 18);
+		headText.setBounds(257, 11, 275, 18);
 		TopPanel.add(headText);
+		
+		JLabel labelUtilisateurCo = new JLabel("  Utilisateur connect\u00E9 : ");
+		labelUtilisateurCo.setBorder(new LineBorder(new Color(0, 0, 0)));
+		labelUtilisateurCo.setBounds(824, 0, 208, 39);
+		TopPanel.add(labelUtilisateurCo);
+		
+		JLabel lblNumroDeCaisse = new JLabel("  Num\u00E9ro de caisse :");
+		lblNumroDeCaisse.setBorder(new LineBorder(new Color(0, 0, 0)));
+		lblNumroDeCaisse.setBounds(669, 0, 155, 39);
+		TopPanel.add(lblNumroDeCaisse);
 		
 		PanelsStack = new JLayeredPane();
 		PanelsStack.setBounds(181, 38, 851, 512);
@@ -100,10 +129,10 @@ public class InterfaceUtilisateur implements Runnable {
 		panelCreerNouveauTicket = new CreationNouveauTicketPanel().getPanel();
 		PanelsStack.add(panelCreerNouveauTicket, "name_6306682648400");
 		
-		panelParcourirFichierClient = new AffichageFichierClientPanel().getPanel();
+		panelParcourirFichierClient = new AffichageFichierUtilisateurPanel().getPanel();
 		PanelsStack.add(panelParcourirFichierClient, "name_6306694792400");
 		
-		panelAjouterNouveauClient = new AjoutClientPanel().getPanel();
+		panelAjouterNouveauClient = new AjoutUtilisateurPanel().getPanel();
 		PanelsStack.add(panelAjouterNouveauClient, "name_6306706746800");
 
 		LeftPanel = new JPanel();
@@ -178,7 +207,7 @@ public class InterfaceUtilisateur implements Runnable {
 		panelGestionClientele.setBounds(10, 341, 162, 154);
 		LeftPanel.add(panelGestionClientele);
 		
-		JLabel lblGestionFichierClient = new JLabel("Gestion Fichier Client");
+		JLabel lblGestionFichierClient = new JLabel("Gestion Utilisateur");
 		lblGestionFichierClient.setHorizontalAlignment(SwingConstants.CENTER);
 		lblGestionFichierClient.setForeground(Color.BLACK);
 		lblGestionFichierClient.setFont(new Font("Tahoma", Font.BOLD, 12));
@@ -187,7 +216,7 @@ public class InterfaceUtilisateur implements Runnable {
 		lblGestionFichierClient.setBounds(0, 0, 162, 30);
 		panelGestionClientele.add(lblGestionFichierClient);
 		
-		JButton btnParcourirFichierClient = new JButton("Parcourir fichier client");
+		JButton btnParcourirFichierClient = new JButton("Parcourir fichier utilisateur");
 		btnParcourirFichierClient.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				switchPanels(panelParcourirFichierClient);
@@ -197,7 +226,7 @@ public class InterfaceUtilisateur implements Runnable {
 		btnParcourirFichierClient.setBounds(10, 41, 142, 30);
 		panelGestionClientele.add(btnParcourirFichierClient);
 		
-		JButton btnAjouterUnNouveau = new JButton("Ajouter nouveau client");
+		JButton btnAjouterUnNouveau = new JButton("Ajouter nouvel utilisateur");
 		btnAjouterUnNouveau.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				switchPanels(panelAjouterNouveauClient);
@@ -214,4 +243,6 @@ public class InterfaceUtilisateur implements Runnable {
 		PanelsStack.repaint();
 		PanelsStack.revalidate();
 	}
+	
+	
 }
