@@ -20,6 +20,8 @@ import java.awt.event.ActionEvent;
 
 import database.UtilisateursActions;
 import database.Categories;
+import database.CategoriesActions;
+import database.ProduitsActions;
 
 public class AjoutProduitPanel {
 	
@@ -99,7 +101,7 @@ public class AjoutProduitPanel {
 		
 		List<Categories> listeCate = new ArrayList<Categories>();
 		
-		listeCate = UtilisateursActions.getCategoriesDB();
+		listeCate = CategoriesActions.getCategoriesDB();
 		
 		for (Categories c : listeCate)
 		{
@@ -114,7 +116,7 @@ public class AjoutProduitPanel {
 				
 				List<Categories> listeCategories = new ArrayList<Categories>();
 				
-				listeCategories = UtilisateursActions.getCategoriesDB();
+				listeCategories = CategoriesActions.getCategoriesDB();
 				
 				for (int i = 1; i<listeCategories.size(); i++)
 				{
@@ -124,7 +126,7 @@ public class AjoutProduitPanel {
 					}
 				}
 				
-				UtilisateursActions.ajouterProduit(0, AjoutProduit_NomProduit.getText(), AjoutProduit_Desc.getText(), Integer.parseInt(AjoutProduit_PrixVente.getText()), Integer.parseInt(AjoutProduitQuantiteMinimum.getText()), 0, AjoutProduitUniteProd.getText(), AjoutProduit_Statut
+				ProduitsActions.ajouterProduit(0, AjoutProduit_NomProduit.getText(), AjoutProduit_Desc.getText(), Integer.parseInt(AjoutProduit_PrixVente.getText()), Integer.parseInt(AjoutProduitQuantiteMinimum.getText()), 0, AjoutProduitUniteProd.getText(), AjoutProduit_Statut
 .getText(), idCate);
 			}
 		});

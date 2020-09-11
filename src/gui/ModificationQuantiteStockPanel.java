@@ -13,8 +13,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import database.Produits;
+import database.ProduitsActions;
 import database.UtilisateursActions;
 
 import javax.swing.JTextField;
@@ -23,6 +26,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JTable;
+import javax.swing.JScrollPane;
 
 public class ModificationQuantiteStockPanel {
 	private JPanel panel;
@@ -33,6 +37,13 @@ public class ModificationQuantiteStockPanel {
 	
 	
 	private static DefaultListModel listRecherche = new DefaultListModel();
+	
+	public String[] columnNames = {"Nom", "Prix", "Quantité min", "Stock", "Unité de mesure", "Statut"};
+	
+	public Object[][] data = 
+		{
+				{"test", "test", "test", "test", "test", "test"}
+		};
 	
 	
 	public ModificationQuantiteStockPanel ()
@@ -84,8 +95,19 @@ public class ModificationQuantiteStockPanel {
 		
 		JList listeProduitRecherche = new JList(listRecherche);
 		listeProduitRecherche.setBorder(new LineBorder(new Color(0, 0, 0)));
-		listeProduitRecherche.setBounds(23, 219, 497, 122);
+		listeProduitRecherche.setBounds(23, 219, 300, 122);
 		listeProduitRecherche.setVisibleRowCount(5);
+		
+		// Action lors du changement de valeur selectionné dans la liste
+		listeProduitRecherche.addListSelectionListener(
+				new ListSelectionListener() {
+					public void valueChanged(ListSelectionEvent event)
+					{
+						
+					}
+				}
+		);
+		
 		panel.add(listeProduitRecherche);
 		
 		JButton btnNewButton = new JButton("Enregistrer les modifications");
@@ -112,7 +134,7 @@ public class ModificationQuantiteStockPanel {
 				
 				List<Produits> arrayListProduits = new ArrayList<Produits>();
 				
-				arrayListProduits = UtilisateursActions.getProduitsDB();
+				arrayListProduits = ProduitsActions.getProduitsDB();
 				
 				for (Produits p : arrayListProduits)
 				{
@@ -144,8 +166,12 @@ public class ModificationQuantiteStockPanel {
 		
 		jTableQuantitePrix = new JTable();
 		jTableQuantitePrix.setBorder(new LineBorder(new Color(0, 0, 0)));
-		jTableQuantitePrix.setBounds(596, 220, 231, 121);
-		panel.add(jTableQuantitePrix);
+		jTableQuantitePrix.setBounds(350, 220, 477, 121);
+		jTableQuantitePrix.setFillsViewportHeight(true);
+
+		JScrollPane scrollPane_1 = new JScrollPane(jTableQuantitePrix);
+		scrollPane_1.setBounds(360, 220, 462, 121);
+		panel.add(scrollPane_1);
 	}
 	
 	public JPanel getPanel() {
