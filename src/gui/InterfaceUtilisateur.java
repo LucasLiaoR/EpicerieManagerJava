@@ -39,6 +39,7 @@ public class InterfaceUtilisateur implements Runnable {
 	private JPanel panelCreerNouveauTicket;
 	private JPanel panelParcourirFichierClient;
 	private JPanel panelAjouterNouveauClient;
+	private JPanel panelAffichageTickets;
 	private Utilisateurs user;
 	
 	public void run() {
@@ -139,8 +140,10 @@ public class InterfaceUtilisateur implements Runnable {
 		
 		panelAjouterNouveauClient = new AjoutUtilisateurPanel().getPanel();
 		PanelsStack.add(panelAjouterNouveauClient, "name_6306706746800");
-
 		
+		panelAffichageTickets = new AffichageTicketsPanel().getPanel();
+		PanelsStack.add(panelAffichageTickets, "name_20462142220600");
+
 		LeftPanel = new JPanel();
 		LeftPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		LeftPanel.setBounds(0, 38, 182, 512);
@@ -207,6 +210,16 @@ public class InterfaceUtilisateur implements Runnable {
 		btnCreerNewTicket.setBounds(10, 41, 142, 30);
 		panelGestionCaisse.add(btnCreerNewTicket);
 		
+		JButton btnHistoriqueDeTransaction = new JButton("Historique de transaction");
+		btnHistoriqueDeTransaction.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				switchPanels(panelAffichageTickets);
+			}
+		});
+		btnHistoriqueDeTransaction.setMargin(new Insets(0, 0, 0, 0));
+		btnHistoriqueDeTransaction.setBounds(2, 83, 158, 30);
+		panelGestionCaisse.add(btnHistoriqueDeTransaction);
+		
 		JPanel panelGestionClientele = new JPanel();
 		panelGestionClientele.setLayout(null);
 		panelGestionClientele.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
@@ -264,6 +277,4 @@ public class InterfaceUtilisateur implements Runnable {
 	{
 		return user;
 	}
-	
-	
 }
