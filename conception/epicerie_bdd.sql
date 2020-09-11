@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS Utilisateurs(
 CREATE TABLE IF NOT EXISTS Tickets(
         tckt_id          Int  Auto_increment  NOT NULL ,
         tckt_date        Date NOT NULL ,
-        tck_statut       Varchar (50) NOT NULL ,
+        tckt_statut       Varchar (50) NOT NULL ,
         tckt_commentaire Varchar (50) ,
         tckt_montant_ttc Float NOT NULL,
         utls_id          Int NOT NULL
@@ -88,9 +88,7 @@ CREATE TABLE IF NOT EXISTS Tickets_Produits(
 # Insertion du premier utilisateur root pour le premier dï¿½marrage
 #------------------------------------------------------------
 
-REPLACE INTO Utilisateurs(utls_id ,utls_nom, utls_prenom, utls_telephone, utls_mail, utls_adresse, utls_mdp, utls_caisse, utls_manager) VALUES (1, "root", "root", "", "", "", "root", 0, true);
-<<<<<<< HEAD
-=======
+INSERT IGNORE INTO Utilisateurs(utls_id ,utls_nom, utls_prenom, utls_telephone, utls_mail, utls_adresse, utls_mdp, utls_caisse, utls_manager) VALUES (1, "root", "root", "", "", "", "root", 0, true);
 
 #------------------------------------------------------------
 # Insertion des premiï¿½res catï¿½gories de produits
@@ -116,4 +114,10 @@ INSERT IGNORE INTO Categories VALUES(15, "Boissons sans alcool");
 # Insertion des premiers produits de base
 #------------------------------------------------------------
 
-REPLACE INTO Produits VALUES(1, 'Pomme rouge', 'Pomme rouge, Origine France', 2, 15, 0, 'kg', 'Rupture', 1);
+INSERT IGNORE INTO Produits VALUES(1, 'Pomme rouge', 'Pomme rouge, Origine France', 2, 15, 0, 'kg', 'Rupture', 1);
+
+#------------------------------------------------------------
+# Insertion des premiers tickets
+#------------------------------------------------------------
+
+INSERT IGNORE INTO Tickets VALUES (1, '2020-09-01', 'fermé', NULL, '20', '1');
