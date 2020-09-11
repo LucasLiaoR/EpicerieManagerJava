@@ -18,7 +18,9 @@ import javax.swing.event.ListSelectionListener;
 
 import database.Produits;
 import database.ProduitsActions;
+import database.TicketsActions;
 import database.UtilisateursActions;
+import net.proteanit.sql.DbUtils;
 
 import javax.swing.JTextField;
 import javax.swing.ListModel;
@@ -27,6 +29,7 @@ import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
+import java.awt.Insets;
 
 public class ModificationQuantiteStockPanel {
 	private JPanel panel;
@@ -37,14 +40,7 @@ public class ModificationQuantiteStockPanel {
 	
 	
 	private static DefaultListModel listRecherche = new DefaultListModel();
-	
-	public String[] columnNames = {"Nom", "Prix", "Quantité min", "Stock", "Unité de mesure", "Statut"};
-	
-	public Object[][] data = 
-		{
-				{"test", "test", "test", "test", "test", "test"}
-		};
-	
+	private static String valeurSelected;
 	
 	public ModificationQuantiteStockPanel ()
 	{
@@ -103,7 +99,9 @@ public class ModificationQuantiteStockPanel {
 				new ListSelectionListener() {
 					public void valueChanged(ListSelectionEvent event)
 					{
+						valeurSelected = listeProduitRecherche.getSelectedValue().toString();
 						
+						jTableQuantitePrix.setModel(DbUtils.resultSetToTableModel(ProduitsActions.getProduitSingle(valeurSelected)));
 					}
 				}
 		);
@@ -154,6 +152,7 @@ public class ModificationQuantiteStockPanel {
 		panel.add(btnNewButton_1);
 		
 		JButton button = new JButton("Reinitialiser recherche");
+		button.setMargin(new Insets(2, 5, 2, 5));
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ModifQuantiteProduit_NomID.setText(null);
@@ -168,9 +167,12 @@ public class ModificationQuantiteStockPanel {
 		jTableQuantitePrix.setBorder(new LineBorder(new Color(0, 0, 0)));
 		jTableQuantitePrix.setBounds(350, 220, 477, 121);
 		jTableQuantitePrix.setFillsViewportHeight(true);
+		
+		jTableQuantitePrix.setModel(DbUtils.resultSetToTableModel(ProduitsActions.getProduitSingle("")));
 
-		JScrollPane scrollPane_1 = new JScrollPane(jTableQuantitePrix);
+		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(360, 220, 462, 121);
+		scrollPane_1.setViewportView(jTableQuantitePrix);
 		panel.add(scrollPane_1);
 	}
 	

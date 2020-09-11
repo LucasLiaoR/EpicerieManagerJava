@@ -62,8 +62,8 @@ public class ProduitsActions {
 		return listeProduits;
 	}
 	
-	public static ResultSet getTickets() {
-		ResultSet resTickets = null;
+	public static ResultSet getProduitSingle(String nomProduit) {
+		ResultSet getProduitSingle = null;
 
 		try {
 			Connection cnx = DBConnection.ConnectToDatabase();
@@ -71,20 +71,20 @@ public class ProduitsActions {
 			Statement st = cnx.createStatement();
 
 			// Recuperer et ajouter tous les tickets
-			resTickets = st.executeQuery("SELECT " + 
-					"    t.tckt_id AS Id," + 
-					"    t.tckt_date AS Date," + 
-					"    t.tckt_statut AS Statut," + 
-					"    t.tckt_commentaire AS Commentaire," + 
-					"    CONCAT(t.tckt_montant_ttc, ' EUR') AS Montant," + 
-					"    CONCAT(u.utls_prenom, ' ', u.utls_nom) AS Utilisateur " + 
+			getProduitSingle = st.executeQuery("SELECT " + 
+					"    prod_nom AS Nom," + 
+					"    prod_prix_vente_ttc AS Prix," + 
+					"    prod_quantite_min AS Quantité_min," + 
+					"    prod_quantite_stock AS Stock," + 
+					"    prod_unite AS Unité_Mesure," +
+					"    prod_statut AS Statut " +
 					"FROM" + 
-					"    tickets t" + 
-					"        JOIN" + 
-					"    utilisateurs u ON t.utls_id = u.utls_id");
+					"    produits" + 
+					"        WHERE" + 
+					"    prod_nom = '" + nomProduit + "'");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return resTickets;
+		return getProduitSingle;
 	}
 }
