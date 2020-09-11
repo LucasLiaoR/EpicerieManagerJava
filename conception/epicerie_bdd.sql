@@ -85,29 +85,29 @@ CREATE TABLE IF NOT EXISTS Tickets_Produits(
 )ENGINE=InnoDB;
 
 #------------------------------------------------------------
-# Insertion du premier utilisateur root pour le premier d�marrage
+# Insertion du premier utilisateur root pour le premier lancement
 #------------------------------------------------------------
 
 INSERT IGNORE INTO Utilisateurs(utls_id ,utls_nom, utls_prenom, utls_telephone, utls_mail, utls_adresse, utls_mdp, utls_caisse, utls_manager) VALUES (1, "root", "root", "", "", "", "root", 0, true);
 
 #------------------------------------------------------------
-# Insertion des premi�res cat�gories de produits
+# Insertion des premieres categories de produits
 #------------------------------------------------------------
 
 INSERT IGNORE INTO Categories VALUES(1, "Fruits");
-INSERT IGNORE INTO Categories VALUES(2, "L�gumes");
+INSERT IGNORE INTO Categories VALUES(2, "Legumes");
 INSERT IGNORE INTO Categories VALUES(3, "Boucherie");
 INSERT IGNORE INTO Categories VALUES(4, "Spiritueux");
 INSERT IGNORE INTO Categories VALUES(5, "Sauces");
 INSERT IGNORE INTO Categories VALUES(6, "Epices");
-INSERT IGNORE INTO Categories VALUES(7, "Produits m�nagers");
-INSERT IGNORE INTO Categories VALUES(8, "P�tes");
-INSERT IGNORE INTO Categories VALUES(9, "Surgel�s");
+INSERT IGNORE INTO Categories VALUES(7, "Produits menagers");
+INSERT IGNORE INTO Categories VALUES(8, "Pates");
+INSERT IGNORE INTO Categories VALUES(9, "Surgeles");
 INSERT IGNORE INTO Categories VALUES(10, "Fromages");
 INSERT IGNORE INTO Categories VALUES(11, "Charcuteries");
-INSERT IGNORE INTO Categories VALUES(12, "Hygi�ne et Beaut�");
+INSERT IGNORE INTO Categories VALUES(12, "Hygiene et Beaute");
 INSERT IGNORE INTO Categories VALUES(13, "Friandises");
-INSERT IGNORE INTO Categories VALUES(14, "Pains et p�tisseries");
+INSERT IGNORE INTO Categories VALUES(14, "Pains et patisseries");
 INSERT IGNORE INTO Categories VALUES(15, "Boissons sans alcool");
 
 #------------------------------------------------------------

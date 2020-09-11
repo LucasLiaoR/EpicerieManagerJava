@@ -136,11 +136,13 @@ public class SelectUserFrame implements Runnable {
 		frmSelectUser.getContentPane().add(lblMotDePasse);
 		
 		fieldNom = new JTextField();
+		fieldNom.setText("root");
 		fieldNom.setBounds(289, 149, 447, 39);
 		frmSelectUser.getContentPane().add(fieldNom);
 		fieldNom.setColumns(10);
 		
 		fieldPrenom = new JTextField();
+		fieldPrenom.setText("root");
 		fieldPrenom.setColumns(10);
 		fieldPrenom.setBounds(289, 225, 447, 39);
 		frmSelectUser.getContentPane().add(fieldPrenom);
