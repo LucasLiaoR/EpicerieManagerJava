@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -234,7 +235,15 @@ public class InterfaceUtilisateur implements Runnable {
 		JButton btnAjouterUnNouveau = new JButton("Ajouter utilisateur");
 		btnAjouterUnNouveau.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				switchPanels(panelAjouterNouveauClient);
+				if (user.isManager() == 1)
+				{
+					switchPanels(panelAjouterNouveauClient);
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null, "Il faut être manager pour accéder à cette option !", "Erreur !", JOptionPane.INFORMATION_MESSAGE);
+				}
+				
 			}
 		});
 		btnAjouterUnNouveau.setMargin(new Insets(2, 2, 2, 2));
