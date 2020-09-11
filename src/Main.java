@@ -9,7 +9,6 @@ public class Main {
 	public static void main(String[] args) {
 		// Creer la BDD pour la 1ere fois
 		DBConnection.CreateDatabase();
-		
 		// Creer les tables pour la 1ere fois
 		try {
 			DBConnection.CreateTables();

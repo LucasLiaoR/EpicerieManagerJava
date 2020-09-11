@@ -88,3 +88,43 @@ CREATE TABLE IF NOT EXISTS Tickets_Produits(
 #------------------------------------------------------------
 
 REPLACE INTO Utilisateurs(utls_id ,utls_nom, utls_prenom, utls_telephone, utls_mail, utls_adresse, utls_mdp, utls_caisse, utls_manager) VALUES (1, "root", "root", "", "", "", "root", 0, true);
+
+#------------------------------------------------------------
+# Insertion des premières catégories de produits
+#------------------------------------------------------------
+
+REPLACE INTO Categories VALUES(1, "Fruits");
+REPLACE INTO Categories VALUES(2, "Légumes");
+REPLACE INTO Categories VALUES(3, "Boucherie");
+REPLACE INTO Categories VALUES(4, "Spiritueux");
+REPLACE INTO Categories VALUES(5, "Sauces");
+REPLACE INTO Categories VALUES(6, "Epices");
+REPLACE INTO Categories VALUES(7, "Produits ménagers");
+REPLACE INTO Categories VALUES(8, "Pâtes");
+REPLACE INTO Categories VALUES(9, "Surgelés");
+REPLACE INTO Categories VALUES(10, "Fromages");
+REPLACE INTO Categories VALUES(11, "Charcuteries");
+REPLACE INTO Categories VALUES(12, "Hygiène et Beauté");
+REPLACE INTO Categories VALUES(13, "Friandises");
+REPLACE INTO Categories VALUES(14, "Pains et pâtisseries");
+REPLACE INTO Categories VALUES(15, "Boissons sans alcool");
+
+#------------------------------------------------------------
+# Insertion des premiers produits de base
+#------------------------------------------------------------
+
+REPLACE INTO Produits VALUES(1, 'Pomme rouge', 'Pomme rouge, Origine France', 2, 15, 0, 'kg', 'Rupture', 1);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
