@@ -77,14 +77,14 @@ public class Utilisateurs implements Serializable {
 	
 	public String createInsertStatement() {
 		return "INSERT INTO UTILISATEURS (utls_nom, utls_prenom, utls_telephone, utls_mail, utls_adresse, utls_mdp, utls_caisse, utls_manager) VALUES("
-				+ "'" + this .getNom() + "',"
-				+ "'" + this .getPrenom() + "',"
-				+ "'" + this .getTelephone() + "',"
-				+ "'" + this .getMail() + "',"
-				+ "'" + this .getAdresse() + "',"
-				+ "'" + this .getMdp() + "',"
-				+ "'" + this .getCaisse() + "',"
-				+ "'" + this .isManager() + "'"
+				+ "'" + this.getNom() + "',"
+				+ "'" + this.getPrenom() + "',"
+				+ "'" + this.getTelephone() + "',"
+				+ "'" + this.getMail() + "',"
+				+ "'" + this.getAdresse() + "',"
+				+ "'" + this.getMdp() + "',"
+				+ "'" + this.getCaisse() + "',"
+				+ "'" + this.isManager() + "'"
 				+ ");";
 	}
 }
