@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,8 +13,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
+
+import database.Produits;
+import database.UtilisateursActions;
+
 import javax.swing.JTextField;
 import javax.swing.ListModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JTable;
@@ -25,9 +31,9 @@ public class ModificationQuantiteStockPanel {
 	private JTextField ModifierQuantiteProduitPrix;
 	private JTable jTableQuantitePrix;
 	
-	private static String[] testListe = {"Ail", "Pomme Rouge", "Pomme Golden", "Tomate", "Pomme de terre"};
 	
-	private static String[] resultatRecherche = {"Ail", "Pomme Rouge", "Pomme Golden", "Tomate", "Pomme de terre"};
+	private static DefaultListModel listRecherche = new DefaultListModel();
+	
 	
 	public ModificationQuantiteStockPanel ()
 	{
@@ -43,7 +49,7 @@ public class ModificationQuantiteStockPanel {
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel_1);
 		
-		JLabel lblNewLabel = new JLabel("Nom ou ID du produit");
+		JLabel lblNewLabel = new JLabel("Nom du produit");
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setBounds(23, 99, 149, 26);
@@ -76,16 +82,20 @@ public class ModificationQuantiteStockPanel {
 		ModifierQuantiteProduitPrix.setBounds(232, 427, 288, 24);
 		panel.add(ModifierQuantiteProduitPrix);
 		
-		JButton btnNewButton = new JButton("Enregistrer les modifications");
-		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 13));
-		btnNewButton.setBounds(592, 426, 235, 56);
-		panel.add(btnNewButton);
-		
-		JList listeProduitRecherche = new JList(resultatRecherche);
+		JList listeProduitRecherche = new JList(listRecherche);
 		listeProduitRecherche.setBorder(new LineBorder(new Color(0, 0, 0)));
 		listeProduitRecherche.setBounds(23, 219, 497, 122);
 		listeProduitRecherche.setVisibleRowCount(5);
 		panel.add(listeProduitRecherche);
+		
+		JButton btnNewButton = new JButton("Enregistrer les modifications");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 13));
+		btnNewButton.setBounds(592, 426, 235, 56);
+		panel.add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("Rechercher produit");
 		btnNewButton_1.setBounds(85, 153, 145, 41);
@@ -96,24 +106,25 @@ public class ModificationQuantiteStockPanel {
 				Pattern pattern = Pattern.compile(champRecherche, Pattern.CASE_INSENSITIVE);
 				Matcher matcher;
 				boolean matchFound;
-				int j = 0;
 				
-				for (int i = 0; i<testListe.length; i++)
-				{
-					resultatRecherche[i] = "";
-				}
+				listRecherche.clear();
 				
-				for (int i = 0; i<testListe.length; i++)
+				
+				List<Produits> arrayListProduits = new ArrayList<Produits>();
+				
+				arrayListProduits = UtilisateursActions.getProduitsDB();
+				
+				for (Produits p : arrayListProduits)
 				{
-					matcher = pattern.matcher(testListe[i]);
+					matcher = pattern.matcher(p.getProd_nom().toString());
 					matchFound = matcher.find();
+					
 					if (matchFound)
 					{
-						resultatRecherche[j] = testListe[i];
-						j++;
+						listRecherche.addElement(p.getProd_nom().toString());
 					}
-						
 				}
+				
 				
 				listeProduitRecherche.updateUI();
 			}
@@ -121,6 +132,13 @@ public class ModificationQuantiteStockPanel {
 		panel.add(btnNewButton_1);
 		
 		JButton button = new JButton("Reinitialiser recherche");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ModifQuantiteProduit_NomID.setText(null);
+				listRecherche.clear();
+				listeProduitRecherche.updateUI();
+			}
+		});
 		button.setBounds(304, 153, 145, 41);
 		panel.add(button);
 		

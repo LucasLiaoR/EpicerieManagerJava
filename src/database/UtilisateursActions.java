@@ -76,7 +76,7 @@ public class UtilisateursActions {
 				int prod_quantite_stock = resProduits.getInt("prod_quantite_stock");
 				String prod_unite = resProduits.getString("prod_unite");
 				String prod_statut = resProduits.getString("prod_statut");
-				int prod_cate_id = resProduits.getInt("prod_cate_id");
+				int prod_cate_id = resProduits.getInt("cate_id");
 				
 				
 				Produits u = new Produits(prod_id, prod_nom, prod_description, prod_prix_vente_ttc, prod_quantite_min, prod_quantite_stock, prod_unite, prod_statut, prod_cate_id);

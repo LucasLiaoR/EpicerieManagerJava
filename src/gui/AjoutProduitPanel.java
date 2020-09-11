@@ -93,17 +93,24 @@ public class AjoutProduitPanel {
 		panelAjouterProduit.add(AjoutProduit_PrixVente);
 		AjoutProduit_PrixVente.setColumns(10);
 		
-		String[] testListeCate = {"Fruits", "Légumes", "Boucherie", "Spiritueux"};
-		
-		JComboBox AjoutProduitCate = new JComboBox(testListeCate);
+		JComboBox AjoutProduitCate = new JComboBox();
 		AjoutProduitCate.setBounds(200, 412, 591, 27);
 		panelAjouterProduit.add(AjoutProduitCate);
+		
+		List<Categories> listeCate = new ArrayList<Categories>();
+		
+		listeCate = UtilisateursActions.getCategoriesDB();
+		
+		for (Categories c : listeCate)
+		{
+			AjoutProduitCate.addItem(c.getLibelle());
+		}
 		
 		JButton btnNewButton = new JButton("Ajouter le produit");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				int idCate = 0;
+				int idCate = 1;
 				
 				List<Categories> listeCategories = new ArrayList<Categories>();
 				
