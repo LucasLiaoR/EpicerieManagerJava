@@ -5,9 +5,13 @@ import java.awt.Font;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
-import javax.swing.JList;
+
+import database.TicketsActions;
+import net.proteanit.sql.DbUtils;
 
 public class AffichageTicketsPanel {
 	private JPanel panel;
@@ -25,11 +29,16 @@ public class AffichageTicketsPanel {
 		lblNewLabel_1.setBounds(325, 0, 239, 40);
 		panel.add(lblNewLabel_1);
 		
-		JList listTickets = new JList();
-		listTickets.setBounds(10, 70, 408, 411);
-		panel.add(listTickets);
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 70, 408, 411);
+		panel.add(scrollPane);
 		
-		JList listProduits = new JList();
+		JTable tableTickets = new JTable();
+		scrollPane.setViewportView(tableTickets);
+		
+		tableTickets.setModel(DbUtils.resultSetToTableModel(TicketsActions.getTickets()));
+		
+		JTable listProduits = new JTable();
 		listProduits.setBounds(433, 70, 408, 411);
 		panel.add(listProduits);
 		
