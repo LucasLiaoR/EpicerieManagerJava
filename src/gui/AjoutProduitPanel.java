@@ -13,15 +13,22 @@ import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.UIManager;
 import javax.swing.JComboBox;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.awt.event.ActionEvent;
+
+import database.UtilisateursActions;
+import database.Categories;
 
 public class AjoutProduitPanel {
 	
 	private JPanel panelAjouterProduit;
 	private JTextField AjoutProduit_NomProduit;
-	private JTextField AjoutProduit_IDProduit;
 	private JTextField AjoutProduit_Statut;
 	private JTextField AjoutProduit_PrixVente;
-	private JTextField textField;
+	private JTextField AjoutProduitUniteProd;
+	private JTextField AjoutProduitQuantiteMinimum;
 	
 	public AjoutProduitPanel ()
 	{
@@ -40,17 +47,6 @@ public class AjoutProduitPanel {
 		lblNewLabel_1.setBounds(10, 76, 163, 27);
 		panelAjouterProduit.add(lblNewLabel_1);
 		
-		JLabel lblIdProduit = new JLabel("ID produit");
-		lblIdProduit.setHorizontalAlignment(SwingConstants.CENTER);
-		lblIdProduit.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblIdProduit.setBounds(10, 114, 163, 27);
-		panelAjouterProduit.add(lblIdProduit);
-		
-		AjoutProduit_IDProduit = new JTextField();
-		AjoutProduit_IDProduit.setColumns(10);
-		AjoutProduit_IDProduit.setBounds(200, 115, 591, 27);
-		panelAjouterProduit.add(AjoutProduit_IDProduit);
-		
 		JLabel lblNewLabel_2 = new JLabel("Ajout d'un nouveau produit");
 		lblNewLabel_2.setBorder(new LineBorder(new Color(0, 0, 0)));
 		lblNewLabel_2.setFont(new Font("Tahoma", Font.ITALIC, 16));
@@ -61,61 +57,97 @@ public class AjoutProduitPanel {
 		JLabel lblCatgorie = new JLabel("Cat\u00E9gorie");
 		lblCatgorie.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCatgorie.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblCatgorie.setBounds(10, 152, 163, 27);
+		lblCatgorie.setBounds(10, 411, 163, 27);
 		panelAjouterProduit.add(lblCatgorie);
 		
 		JLabel lblStatut = new JLabel("Statut");
 		lblStatut.setHorizontalAlignment(SwingConstants.CENTER);
 		lblStatut.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblStatut.setBounds(10, 190, 163, 27);
+		lblStatut.setBounds(10, 367, 163, 27);
 		panelAjouterProduit.add(lblStatut);
 		
 		AjoutProduit_Statut = new JTextField();
 		AjoutProduit_Statut.setColumns(10);
-		AjoutProduit_Statut.setBounds(200, 190, 591, 27);
+		AjoutProduit_Statut.setBounds(200, 368, 591, 27);
 		panelAjouterProduit.add(AjoutProduit_Statut);
 		
 		JLabel lblDescription = new JLabel("Description");
 		lblDescription.setHorizontalAlignment(SwingConstants.CENTER);
 		lblDescription.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblDescription.setBounds(10, 228, 163, 27);
+		lblDescription.setBounds(10, 142, 163, 27);
 		panelAjouterProduit.add(lblDescription);
 		
 		JTextArea AjoutProduit_Desc = new JTextArea();
 		AjoutProduit_Desc.setBorder(UIManager.getBorder("FileChooser.listViewBorder"));
-		AjoutProduit_Desc.setBounds(200, 228, 591, 124);
+		AjoutProduit_Desc.setBounds(200, 122, 591, 67);
 		panelAjouterProduit.add(AjoutProduit_Desc);
 		
 		JLabel lblPrixDeVente = new JLabel("Prix de vente");
 		lblPrixDeVente.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPrixDeVente.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblPrixDeVente.setBounds(10, 406, 163, 27);
+		lblPrixDeVente.setBounds(10, 208, 163, 27);
 		panelAjouterProduit.add(lblPrixDeVente);
 		
 		AjoutProduit_PrixVente = new JTextField();
-		AjoutProduit_PrixVente.setBounds(200, 404, 591, 32);
+		AjoutProduit_PrixVente.setBounds(200, 200, 591, 32);
 		panelAjouterProduit.add(AjoutProduit_PrixVente);
 		AjoutProduit_PrixVente.setColumns(10);
 		
+		String[] testListeCate = {"Fruits", "Légumes", "Boucherie", "Spiritueux"};
+		
+		JComboBox AjoutProduitCate = new JComboBox(testListeCate);
+		AjoutProduitCate.setBounds(200, 412, 591, 27);
+		panelAjouterProduit.add(AjoutProduitCate);
+		
 		JButton btnNewButton = new JButton("Ajouter le produit");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				int idCate = 0;
+				
+				List<Categories> listeCategories = new ArrayList<Categories>();
+				
+				listeCategories = UtilisateursActions.getCategoriesDB();
+				
+				for (int i = 1; i<listeCategories.size(); i++)
+				{
+					if (listeCategories.get(i).getLibelle().equals(AjoutProduitCate.getSelectedItem()))
+					{
+						idCate = i+1;
+					}
+				}
+				
+				UtilisateursActions.ajouterProduit(0, AjoutProduit_NomProduit.getText(), AjoutProduit_Desc.getText(), Integer.parseInt(AjoutProduit_PrixVente.getText()), Integer.parseInt(AjoutProduitQuantiteMinimum.getText()), 0, AjoutProduitUniteProd.getText(), AjoutProduit_Statut
+.getText(), idCate);
+			}
+		});
 		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnNewButton.setBounds(553, 449, 271, 52);
 		panelAjouterProduit.add(btnNewButton);
 		
-		JLabel lblPrixDachat = new JLabel("Prix d'achat");
-		lblPrixDachat.setHorizontalAlignment(SwingConstants.CENTER);
-		lblPrixDachat.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblPrixDachat.setBounds(10, 365, 163, 27);
-		panelAjouterProduit.add(lblPrixDachat);
+		JLabel ProdUnite = new JLabel("Unite de compte");
+		ProdUnite.setHorizontalAlignment(SwingConstants.CENTER);
+		ProdUnite.setFont(new Font("Tahoma", Font.BOLD, 13));
+		ProdUnite.setBounds(10, 310, 163, 27);
+		panelAjouterProduit.add(ProdUnite);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(200, 363, 591, 32);
-		panelAjouterProduit.add(textField);
+		AjoutProduitUniteProd = new JTextField();
+		AjoutProduitUniteProd.setColumns(10);
+		AjoutProduitUniteProd.setBounds(200, 308, 591, 32);
+		panelAjouterProduit.add(AjoutProduitUniteProd);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(200, 153, 591, 27);
-		panelAjouterProduit.add(comboBox);
+		
+		
+		JLabel lblQuantitMinimum = new JLabel("Quantit\u00E9 minimum");
+		lblQuantitMinimum.setHorizontalAlignment(SwingConstants.CENTER);
+		lblQuantitMinimum.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblQuantitMinimum.setBounds(10, 258, 163, 27);
+		panelAjouterProduit.add(lblQuantitMinimum);
+		
+		AjoutProduitQuantiteMinimum = new JTextField();
+		AjoutProduitQuantiteMinimum.setColumns(10);
+		AjoutProduitQuantiteMinimum.setBounds(200, 256, 591, 32);
+		panelAjouterProduit.add(AjoutProduitQuantiteMinimum);
 	}
 	
 	public JPanel getPanel() {

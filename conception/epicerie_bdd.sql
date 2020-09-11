@@ -96,7 +96,7 @@ REPLACE INTO Utilisateurs(utls_id ,utls_nom, utls_prenom, utls_telephone, utls_m
 REPLACE INTO Categories VALUES(1, "Fruits");
 REPLACE INTO Categories VALUES(2, "Légumes");
 REPLACE INTO Categories VALUES(3, "Boucherie");
-REPLACE INTO Categories VALUES(4, "Spiriteux");
+REPLACE INTO Categories VALUES(4, "Spiritueux");
 REPLACE INTO Categories VALUES(5, "Sauces");
 REPLACE INTO Categories VALUES(6, "Epices");
 REPLACE INTO Categories VALUES(7, "Produits ménagers");

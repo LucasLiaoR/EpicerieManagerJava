@@ -55,4 +55,85 @@ public class UtilisateursActions {
 		}
 		return listUtilisateurs;
 	}
+	
+	public static List<Produits> getProduitsDB()
+	{
+		List<Produits> listeProduits = new ArrayList<Produits>();
+		
+		try {
+			Connection cnx = DBConnection.ConnectToDatabase();
+
+			Statement st = cnx.createStatement();
+
+			// Recuperer et ajouter tous les produits
+			ResultSet resProduits = st.executeQuery("SELECT * FROM produits");
+			while (resProduits.next()) {
+				int prod_id = resProduits.getInt("prod_id");
+				String prod_nom = resProduits.getString("prod_nom");
+				String prod_description = resProduits.getString("prod_description");
+				int prod_prix_vente_ttc = resProduits.getInt("prod_prix_vente_ttc");
+				int prod_quantite_min = resProduits.getInt("prod_quantite_min");
+				int prod_quantite_stock = resProduits.getInt("prod_quantite_stock");
+				String prod_unite = resProduits.getString("prod_unite");
+				String prod_statut = resProduits.getString("prod_statut");
+				int prod_cate_id = resProduits.getInt("prod_cate_id");
+				
+				
+				Produits u = new Produits(prod_id, prod_nom, prod_description, prod_prix_vente_ttc, prod_quantite_min, prod_quantite_stock, prod_unite, prod_statut, prod_cate_id);
+				listeProduits.add(u);
+			}
+			cnx.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return listeProduits;
+	}
+	
+	
+	public static boolean ajouterProduit(int id, String nom, String desc, int prixVente, int qteMin, int qteStock, String unite, String statut, int cateID)
+	{
+		try {
+			Connection cnx = DBConnection.ConnectToDatabase();
+			Statement st = cnx.createStatement();
+
+			Produits p = new Produits(id, nom, desc, prixVente, qteMin, qteStock, unite, statut, cateID);
+			String insertStatement = p.createInsertStatement();
+			
+			System.out.println(insertStatement);
+
+			st.execute(insertStatement);
+			cnx.close();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public static List<Categories> getCategoriesDB()
+	{
+		List<Categories> listeCategories = new ArrayList<Categories>();
+		
+		try {
+			Connection cnx = DBConnection.ConnectToDatabase();
+
+			Statement st = cnx.createStatement();
+
+			// Recuperer et ajouter tous les produits
+			ResultSet resProduits = st.executeQuery("SELECT * FROM categories");
+			while (resProduits.next()) {
+				int cate_id = resProduits.getInt("cate_id");
+				String cate_libelle = resProduits.getString("cate_libelle");
+
+				
+				Categories c = new Categories(cate_id, cate_libelle);
+				listeCategories.add(c);
+			}
+			cnx.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return listeCategories;
+	}
+	
 }
