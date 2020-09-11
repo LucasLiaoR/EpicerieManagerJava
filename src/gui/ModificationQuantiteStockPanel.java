@@ -99,9 +99,16 @@ public class ModificationQuantiteStockPanel {
 				new ListSelectionListener() {
 					public void valueChanged(ListSelectionEvent event)
 					{
-						valeurSelected = listeProduitRecherche.getSelectedValue().toString();
-						
-						jTableQuantitePrix.setModel(DbUtils.resultSetToTableModel(ProduitsActions.getProduitSingle(valeurSelected)));
+						if (listeProduitRecherche.getSelectedValue() != null)
+						{
+							valeurSelected = listeProduitRecherche.getSelectedValue().toString();
+							
+							jTableQuantitePrix.setModel(DbUtils.resultSetToTableModel(ProduitsActions.getProduitSingle(valeurSelected)));
+						}
+						else
+						{
+							valeurSelected = "";
+						}
 					}
 				}
 		);
@@ -155,8 +162,10 @@ public class ModificationQuantiteStockPanel {
 		button.setMargin(new Insets(2, 5, 2, 5));
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				valeurSelected = "";
 				ModifQuantiteProduit_NomID.setText(null);
 				listRecherche.clear();
+				jTableQuantitePrix.setModel(DbUtils.resultSetToTableModel(ProduitsActions.getProduitSingle("")));
 				listeProduitRecherche.updateUI();
 			}
 		});
