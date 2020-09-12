@@ -23,6 +23,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
 import database.Utilisateurs;
+import database.UtilisateursActions;
 
 public class InterfaceUtilisateur implements Runnable {
 
@@ -40,7 +41,8 @@ public class InterfaceUtilisateur implements Runnable {
 	private JPanel panelParcourirFichierClient;
 	private JPanel panelAjouterNouveauClient;
 	private JPanel panelAffichageTickets;
-	private Utilisateurs user;
+	public static JLabel labelUtilisateurCo;
+	private static Utilisateurs user;
 	
 	public void run() {
 		try {
@@ -107,7 +109,7 @@ public class InterfaceUtilisateur implements Runnable {
 		headText.setBounds(257, 11, 275, 18);
 		TopPanel.add(headText);
 		
-		JLabel labelUtilisateurCo = new JLabel("Utilisateur connect\u00E9 : ");
+		labelUtilisateurCo = new JLabel("Utilisateur connect\u00E9 : ");
 		labelUtilisateurCo.setHorizontalAlignment(SwingConstants.CENTER);
 		labelUtilisateurCo.setBorder(new LineBorder(new Color(0, 0, 0)));
 		labelUtilisateurCo.setBounds(757, 0, 275, 39);
@@ -273,8 +275,25 @@ public class InterfaceUtilisateur implements Runnable {
 		PanelsStack.revalidate();
 	}
 	
-	public Utilisateurs getUser()
+	public static Utilisateurs getUser()
 	{
 		return user;
+	}
+	
+	public static void setUser(Utilisateurs u)
+	{
+		user = u;
+	}
+	
+	public static void setIdUser()
+	{
+		int id = UtilisateursActions.recupID(user.getNom(), user.getPrenom());
+		
+		user.setId(id);
+	}
+	
+	public static void setLabelUser()
+	{
+		labelUtilisateurCo.setText("Utilisateur connecté : " + getUser().getPrenom() + " - " + getUser().getNom());
 	}
 }
