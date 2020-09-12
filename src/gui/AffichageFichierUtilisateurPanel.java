@@ -7,16 +7,39 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+import database.ProduitsActions;
+import database.Utilisateurs;
+import database.UtilisateursActions;
+import fr.sql.utilities.DbUtils;
+
 import javax.swing.JTextField;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JTable;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.awt.event.ActionEvent;
+import javax.swing.JScrollPane;
 
 public class AffichageFichierUtilisateurPanel {
 	private JPanel panel;
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField textFieldNom;
+	private JTextField textFieldPrenom;
 	private JTable table;
+	
+
+	public static DefaultListModel listRecherche = new DefaultListModel();
+	public static List<Utilisateurs> listeUtilisateursDB = new ArrayList<Utilisateurs>();
+	private static String valeurSelected;
+	/**
+	 * @wbp.nonvisual location=-43,159
+	 */
+	private final JScrollPane scrollPane_2 = new JScrollPane();
 	
 	public AffichageFichierUtilisateurPanel ()
 	{
@@ -37,47 +60,103 @@ public class AffichageFichierUtilisateurPanel {
 		lblNewLabel.setBounds(10, 59, 163, 30);
 		panel.add(lblNewLabel);
 		
-		textField = new JTextField();
-		textField.setBounds(183, 59, 320, 33);
-		panel.add(textField);
-		textField.setColumns(10);
+		textFieldNom = new JTextField();
+		textFieldNom.setBounds(183, 59, 163, 33);
+		panel.add(textFieldNom);
+		textFieldNom.setColumns(10);
 		
-		JLabel lblPrnomRechercher = new JLabel("ID utilisateur");
+		JLabel lblPrnomRechercher = new JLabel("Prenom utilisateur");
 		lblPrnomRechercher.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPrnomRechercher.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblPrnomRechercher.setBounds(10, 110, 163, 30);
 		panel.add(lblPrnomRechercher);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(183, 110, 320, 33);
-		panel.add(textField_1);
+		textFieldPrenom = new JTextField();
+		textFieldPrenom.setColumns(10);
+		textFieldPrenom.setBounds(183, 110, 163, 33);
+		panel.add(textFieldPrenom);
 		
 		JButton btnNewButton = new JButton("Rechercher un utilisateur");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				
+				if (!textFieldNom.getText().toString().equals("") && !textFieldPrenom.getText().toString().equals(""))
+				{
+					listeUtilisateursDB = UtilisateursActions.getUtilisateurs();
+					
+					String inputNom = textFieldNom.getText().toString();
+					String inputPrenom = textFieldPrenom.getText().toString();
+					
+					for (Utilisateurs u : listeUtilisateursDB)
+					{
+						if (u.getNom().equals(inputNom) || u.getPrenom().equals(inputPrenom))
+						{
+							listRecherche.addElement(Integer.valueOf(u.getId()).toString() + " - " + u.getPrenom().toString() + " - " + u.getNom().toString());
+						}
+					}
+				}
+				
+			}
+		});
+		
 		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		btnNewButton.setBounds(320, 164, 183, 30);
+		btnNewButton.setBounds(82, 157, 183, 30);
 		panel.add(btnNewButton);
 		
-		JList list = new JList();
+		JList list = new JList(listRecherche);
 		list.setBounds(28, 219, 475, 267);
-		panel.add(list);
+		
+		list.addListSelectionListener(
+				new ListSelectionListener() {
+					public void valueChanged(ListSelectionEvent event)
+					{
+						if (list.getSelectedValue() != null)
+						{
+							valeurSelected = list.getSelectedValue().toString();
+							
+							int idRecherche = 1;
+							
+							for (int i = 0; i<5;i++)
+							{
+								
+							}
+							
+							table.setModel(DbUtils.resultSetToTableModel(UtilisateursActions.getUtilisateurSingle(idRecherche)));
+						}
+						else
+						{
+							valeurSelected = "";
+						}
+					}
+				}
+		);
 		
 		JLabel lblNewLabel_2 = new JLabel("R\u00E9sultats");
-		lblNewLabel_2.setBounds(28, 198, 46, 14);
+		lblNewLabel_2.setBounds(28, 218, 70, 14);
 		panel.add(lblNewLabel_2);
 		
 		table = new JTable();
 		table.setBounds(527, 80, 314, 347);
-		panel.add(table);
 		
 		JLabel lblNewLabel_3 = new JLabel("Fiche utilisateur");
-		lblNewLabel_3.setBounds(527, 59, 89, 14);
+		lblNewLabel_3.setBounds(560, 59, 155, 14);
 		panel.add(lblNewLabel_3);
 		
 		JButton btnNewButton_1 = new JButton("Selectionner l'utilisateur");
 		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnNewButton_1.setBounds(578, 453, 263, 33);
 		panel.add(btnNewButton_1);
+		
+		
+		
+		JScrollPane scrollPane_1 = new JScrollPane(table);
+		scrollPane_1.setBounds(400, 80, 441, 347);
+		panel.add(scrollPane_1);
+		
+		JScrollPane scrollPane = new JScrollPane(list);
+		scrollPane.setBounds(28, 243, 314, 196);
+		panel.add(scrollPane);
 	}
 	
 	public JPanel getPanel() {

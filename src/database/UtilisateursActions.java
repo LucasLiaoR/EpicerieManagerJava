@@ -56,6 +56,35 @@ public class UtilisateursActions {
 		return listUtilisateurs;
 	}
 	
+	public static ResultSet getUtilisateurSingle(int idUtilisateur) {
+		ResultSet getUtilisateurSingle = null;
+
+		try {
+			Connection cnx = DBConnection.ConnectToDatabase();
+
+			Statement st = cnx.createStatement();
+
+			// Recuperer et ajouter tous les tickets
+			getUtilisateurSingle = st.executeQuery("SELECT " + 
+					"    utls_id AS ID," + 
+					"    utls_nom AS Nom," + 
+					"    utls_prenom AS Prenom," + 
+					"    utls_telephone AS Telephone," + 
+					"    utls_mail AS Mail," +
+					"    utls_adresse AS Adresse," +
+					"    utls_manager AS Manager " +
+					"FROM" + 
+					"    utilisateurs" + 
+					"        WHERE" + 
+					"    utls_id = " + idUtilisateur);
+
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return getUtilisateurSingle;
+	}
+	
 	
 	
 	
