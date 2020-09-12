@@ -90,7 +90,7 @@ public class ProduitsActions {
 		return getProduitSingle;
 	}
 	
-	public static ResultSet getAllProduitBySatusResultSet(String... status) {
+	public static ResultSet getAllProduitByStatusResultSet(String... status) {
 		ResultSet getProduitSingle = null;
 
 		try {

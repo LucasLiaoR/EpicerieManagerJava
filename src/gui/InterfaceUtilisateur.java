@@ -126,14 +126,14 @@ public class InterfaceUtilisateur implements Runnable {
 		frmAjoutDunNouveau.getContentPane().add(PanelsStack);
 		PanelsStack.setLayout(new CardLayout(0, 0));
 		
+		panelCreerNouveauTicket = new CreationNouveauTicketPanel(user).getPanel();
+		PanelsStack.add(panelCreerNouveauTicket, "name_6306682648400");
+		
 		panelAjouterProduit = new AjoutProduitPanel().getPanel();
 		PanelsStack.add(panelAjouterProduit, "name_6306658276400");
 		
 		panelModifierQuantiteStock = new ModificationQuantiteStockPanel().getPanel();
 		PanelsStack.add(panelModifierQuantiteStock, "name_6306670600200");
-		
-		panelCreerNouveauTicket = new CreationNouveauTicketPanel().getPanel();
-		PanelsStack.add(panelCreerNouveauTicket, "name_6306682648400");
 		
 		panelParcourirFichierClient = new AffichageFichierUtilisateurPanel().getPanel();
 		PanelsStack.add(panelParcourirFichierClient, "name_6306694792400");

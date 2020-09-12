@@ -11,7 +11,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
 import database.TicketsActions;
-import net.proteanit.sql.DbUtils;
+import fr.sql.utilities.DbUtils;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 

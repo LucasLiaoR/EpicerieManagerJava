@@ -76,4 +76,14 @@ public class TicketsActions {
 		}
 		return listTickets;
 	}
+
+	public static void insererNouveauTicket() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public static void insererTicketsProduits() {
+		// TODO Auto-generated method stub
+		
+	}
 }

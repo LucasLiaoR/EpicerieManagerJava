@@ -1,4 +1,4 @@
-package net.proteanit.sql;
+package fr.sql.utilities;
 
 import java.util.Vector;
 

@@ -20,7 +20,7 @@ import database.Produits;
 import database.ProduitsActions;
 import database.TicketsActions;
 import database.UtilisateursActions;
-import net.proteanit.sql.DbUtils;
+import fr.sql.utilities.DbUtils;
 
 import javax.swing.JTextField;
 import javax.swing.ListModel;
