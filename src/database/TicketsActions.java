@@ -26,7 +26,7 @@ public class TicketsActions {
 		}
 	}
 
-	public static ResultSet getTickets() {
+	public static ResultSet getTicketsResultSet() {
 		ResultSet resTickets = null;
 
 		try {
@@ -50,5 +50,30 @@ public class TicketsActions {
 			e.printStackTrace();
 		}
 		return resTickets;
+	}
+	
+	public static List<Tickets> getTicketsList() {
+		List<Tickets> listTickets = new ArrayList<Tickets>();
+
+		try {
+			Connection cnx = DBConnection.ConnectToDatabase();
+
+			Statement st = cnx.createStatement();
+
+			// Recuperer et ajouter tous les tickets
+			ResultSet resTickets = st.executeQuery("SELECT * FROM tickets");
+			while (resTickets.next()) {
+				Timestamp date = resTickets.getTimestamp("tckt_date");
+				String statut = resTickets.getString("tck_statut");
+				String commentaire = resTickets.getString("tckt_commentaire");
+				int idUtilisateur = resTickets.getInt("utls_id");
+				Tickets t = new Tickets(date, statut, commentaire, idUtilisateur);
+				listTickets.add(t);
+			}
+			cnx.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return listTickets;
 	}
 }

@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ProduitsActions {
@@ -82,6 +83,42 @@ public class ProduitsActions {
 					"    produits" + 
 					"        WHERE" + 
 					"    prod_nom = '" + nomProduit + "'");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return getProduitSingle;
+	}
+	
+	public static ResultSet getAllProduitBySatusResultSet(String... status) {
+		ResultSet getProduitSingle = null;
+
+		try {
+			Connection cnx = DBConnection.ConnectToDatabase();
+
+			Statement st = cnx.createStatement();
+			
+			// Préparer les arguments
+			String statusArguments = "";
+			for(int i = 0; i < status.length; i++) {
+				statusArguments += "'" + status[i] + "'";
+				if(i != status.length-1) {
+					statusArguments += ",";
+				}
+			}
+
+			// Recuperer et ajouter tous les tickets
+			getProduitSingle = st.executeQuery("SELECT " + 
+					"	 prod_id AS Id," +
+					"    prod_nom AS Nom," + 
+					"    prod_prix_vente_ttc AS Prix," + 
+					"    prod_quantite_min AS Quantité_min," + 
+					"    prod_quantite_stock AS Stock," + 
+					"    prod_unite AS Unité_Mesure," +
+					"    prod_statut AS Statut " +
+					"FROM" + 
+					"    produits" + 
+					"        WHERE" + 
+					"    prod_statut in (" + statusArguments + ");");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

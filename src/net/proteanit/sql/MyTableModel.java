@@ -12,6 +12,10 @@ public class MyTableModel extends DefaultTableModel {
 		super(rows, columnNames);
 	}
 
+	public MyTableModel(Object[][] objects, String[] strings) {
+		super(objects, strings);
+	}
+
 	public boolean isCellEditable(int row, int column) {
 		return false;
 	}

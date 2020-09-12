@@ -12,6 +12,8 @@ import javax.swing.border.LineBorder;
 
 import database.TicketsActions;
 import net.proteanit.sql.DbUtils;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class AffichageTicketsPanel {
 	private JPanel panel;
@@ -34,9 +36,15 @@ public class AffichageTicketsPanel {
 		panel.add(scrollPane);
 		
 		JTable tableTickets = new JTable();
+		tableTickets.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				System.out.println(tableTickets.getValueAt(tableTickets.getSelectedRow(), 0).toString());
+			}
+		});
 		scrollPane.setViewportView(tableTickets);
 		
-		tableTickets.setModel(DbUtils.resultSetToTableModel(TicketsActions.getTickets()));
+		tableTickets.setModel(DbUtils.resultSetToTableModel(TicketsActions.getTicketsResultSet()));
 		
 		JTable listProduits = new JTable();
 		listProduits.setBounds(433, 70, 408, 411);
