@@ -47,6 +47,7 @@ public class UtilisateursActions {
 				String caisse = resUtilisateurs.getString("utls_caisse");
 				int manager = resUtilisateurs.getInt("utls_manager");
 				Utilisateurs u = new Utilisateurs(nom, prenom, telephone, mail, adresse, mdp, caisse, manager);
+				u.setIdUser();
 				listUtilisateurs.add(u);
 			}
 			cnx.close();
@@ -58,6 +59,7 @@ public class UtilisateursActions {
 	
 	public static ResultSet getUtilisateurSingle(int idUtilisateur) {
 		ResultSet getUtilisateurSingle = null;
+
 
 		try {
 			Connection cnx = DBConnection.ConnectToDatabase();
@@ -95,8 +97,9 @@ public class UtilisateursActions {
 		
 		for (Utilisateurs u : liste)
 		{
+			System.out.println(id + " - " + u.getId());
 			
-			if (u.getMdp().toString().equals(pass) && u.getId() + 1 == id)
+			if (u.getMdp().toString().equals(pass) && u.getId() == id)
 			{
 				return u;
 			}
@@ -104,6 +107,31 @@ public class UtilisateursActions {
 
 		return null;
 		
+	}
+	
+	public static int recupID(String nom, String prenom)
+	{
+		int id = 0;
+		
+		try {
+			Connection cnx = DBConnection.ConnectToDatabase();
+
+			Statement st = cnx.createStatement();
+
+			// Recuperer et ajouter tous les utilisateurs
+			ResultSet resUtilisateurs = st.executeQuery("SELECT * FROM utilisateurs");
+			while (resUtilisateurs.next()) {
+				if (resUtilisateurs.getString("utls_nom").equals(nom) && resUtilisateurs.getString("utls_prenom").equals(prenom))
+				{
+					id = resUtilisateurs.getInt("utls_id");
+				}
+			}
+			cnx.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return id;
 	}
 	
 	

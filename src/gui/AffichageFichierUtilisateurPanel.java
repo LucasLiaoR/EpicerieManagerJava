@@ -99,7 +99,7 @@ public class AffichageFichierUtilisateurPanel {
 					{
 						if (u.getNom().equals(inputNom) || u.getPrenom().equals(inputPrenom))
 						{
-							listRecherche.addElement(Integer.valueOf(u.getId() + 1).toString() + " - " + u.getPrenom().toString() + " - " + u.getNom().toString());
+							listRecherche.addElement(Integer.valueOf(u.getId()).toString() + " - " + u.getPrenom().toString() + " - " + u.getNom().toString());
 						}
 					}
 				}
@@ -135,9 +135,9 @@ public class AffichageFichierUtilisateurPanel {
 							}
 							
 							idRecherche = Integer.parseInt(idString);
-							idRecherche++;
+							
+							System.out.println(idRecherche);
 
-						
 							
 							table.setModel(DbUtils.resultSetToTableModel(UtilisateursActions.getUtilisateurSingle(idRecherche)));
 						}
@@ -173,6 +173,11 @@ public class AffichageFichierUtilisateurPanel {
 					if (user != null)
 					{
 						InterfaceUtilisateur.setUser(user);
+						InterfaceUtilisateur.setLabelUser();
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(null, "Echec de l'authentification !", "Erreur !", JOptionPane.INFORMATION_MESSAGE);
 					}
 				}
 				else

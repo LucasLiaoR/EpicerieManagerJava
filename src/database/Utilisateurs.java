@@ -75,6 +75,13 @@ public class Utilisateurs implements Serializable {
 
 	public void setManager(int manager) { this.manager = manager; }
 	
+	public void setIdUser()
+	{
+		int idRecherche = UtilisateursActions.recupID(nom, prenom);
+		
+		id = idRecherche;
+	}
+	
 	public String createInsertStatement() {
 		return "INSERT INTO UTILISATEURS (utls_nom, utls_prenom, utls_telephone, utls_mail, utls_adresse, utls_mdp, utls_caisse, utls_manager) VALUES("
 				+ "'" + this.getNom() + "',"
