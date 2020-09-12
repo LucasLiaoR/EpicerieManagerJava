@@ -56,7 +56,7 @@ public class ProduitsActions {
 				Produits u = new Produits(prod_id, prod_nom, prod_description, prod_prix_vente_ttc, prod_quantite_min, prod_quantite_stock, prod_unite, prod_statut, prod_cate_id);
 				listeProduits.add(u);
 			}
-			cnx.close();
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -83,6 +83,7 @@ public class ProduitsActions {
 					"    produits" + 
 					"        WHERE" + 
 					"    prod_nom = '" + nomProduit + "'");
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -123,5 +124,40 @@ public class ProduitsActions {
 			e.printStackTrace();
 		}
 		return getProduitSingle;
+	}
+	
+	public static void modifierStockProduit(float montantModif, float prix,Produits produit)
+	{
+		try {
+			Connection cnx = DBConnection.ConnectToDatabase();
+
+			Statement st = cnx.createStatement();
+			
+			String statut;
+			
+			if (produit.getProd_quantite_stock() + montantModif < produit.getProd_quantite_min())
+			{
+				statut = "A commander";
+			}
+			else if (produit.getProd_quantite_stock() + montantModif >= produit.getProd_quantite_min())
+			{
+				statut = "En stock";
+			}
+			else
+			{
+				statut = "Rupture";
+			}
+
+			st.executeUpdate("UPDATE produits SET prod_quantite_stock = prod_quantite_stock + " + montantModif + " WHERE prod_id = " + produit.getProd_id() + ";");
+			st.executeUpdate("UPDATE produits SET prod_statut = '" + statut + "' WHERE prod_id = " + produit.getProd_id() + ";");
+			st.executeUpdate("UPDATE produits SET prod_prix_vente_ttc = " + prix + "WHERE prod_id = " + produit.getProd_id() + ";");
+			
+			
+
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 	}
 }
