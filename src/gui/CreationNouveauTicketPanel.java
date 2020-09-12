@@ -7,18 +7,22 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 
 import database.ProduitsActions;
-import net.proteanit.sql.DbUtils;
-import net.proteanit.sql.MyTableModel;
+import database.Tickets;
+import database.Utilisateurs;
+import fr.sql.utilities.DbUtils;
+import fr.sql.utilities.MyTableModel;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 
-import java.awt.Insets;
+import java.awt.Insets;  
 import java.awt.SystemColor;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
@@ -31,11 +35,20 @@ import java.util.List;
 
 public class CreationNouveauTicketPanel {
 	private JPanel panel;
+	private Utilisateurs user;
 	private JTextField textField_Quantite;
 	private JLabel lbNomProduitChoisi;
+	private float montantTotal;
 	private List<Integer> indexProduitsDansPanier = new ArrayList<Integer>();
+	private JTable tablePanier;
+	private MyTableModel modelTablePanier;
 
-	public CreationNouveauTicketPanel() {
+	public CreationNouveauTicketPanel(Utilisateurs u) {
+		this.user = u;
+		initialize();
+	}
+	
+	public void initialize(){
 		panel = new JPanel();
 		panel.setBounds(181, 38, 851, 512);
 		panel.setLayout(null);
@@ -67,25 +80,48 @@ public class CreationNouveauTicketPanel {
 		panel_1.add(lblNewLabel_2);
 
 		JButton btnNewButton = new JButton("Encaisser le panier");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFrame topFrame = (JFrame)SwingUtilities.windowForComponent(panel);
+				topFrame.setVisible(false);
+				SwingUtilities.invokeLater(new EncaissementPanierFrame(indexProduitsDansPanier, modelTablePanier, montantTotal, getUser()));
+			}
+		});
 		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnNewButton.setBounds(0, 390, 277, 34);
 		panel_1.add(btnNewButton);
 
 		JScrollPane scrollPanePanier = new JScrollPane();
-		scrollPanePanier.setBounds(10, 55, 257, 324);
+		scrollPanePanier.setBounds(0, 55, 277, 295);
 		panel_1.add(scrollPanePanier);
 
-		JTable tablePanier = new JTable();
-		MyTableModel modelTablePanier = new MyTableModel(new Object[][] {},
-				new String[] { "Produit", "Quantit\u00E9", "Montant" });
+		tablePanier = new JTable();
+		modelTablePanier = new MyTableModel(new Object[][] {},
+				new String[] { "Produit", "Quantit\u00E9", "Unité", "Montant" });
 		tablePanier.setModel(modelTablePanier);
 		tablePanier.getColumnModel().getColumn(0).setPreferredWidth(120);
 		tablePanier.getColumnModel().getColumn(0).setMinWidth(100);
-		tablePanier.getColumnModel().getColumn(1).setPreferredWidth(60);
+		tablePanier.getColumnModel().getColumn(1).setPreferredWidth(55);
+		tablePanier.getColumnModel().getColumn(1).setMinWidth(55);
 		tablePanier.getColumnModel().getColumn(2).setPreferredWidth(60);
 		tablePanier.getColumnModel().getColumn(2).setMinWidth(60);
+		tablePanier.getColumnModel().getColumn(3).setPreferredWidth(65);
+		tablePanier.getColumnModel().getColumn(3).setMinWidth(60);
 		scrollPanePanier.setViewportView(tablePanier);
 		tablePanier.setBorder(new LineBorder(new Color(0, 0, 0)));
+		
+		JLabel lblMontantTotal = new JLabel("Montant total");
+		lblMontantTotal.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblMontantTotal.setBounds(10, 361, 110, 21);
+		panel_1.add(lblMontantTotal);
+		
+		JLabel lblEur = new JLabel("0 EUR    ");
+		lblEur.setHorizontalAlignment(SwingConstants.TRAILING);
+		lblEur.setOpaque(true);
+		lblEur.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblEur.setBackground(SystemColor.info);
+		lblEur.setBounds(112, 361, 143, 19);
+		panel_1.add(lblEur);
 
 		JPanel panel_2 = new JPanel();
 		panel_2.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -111,7 +147,7 @@ public class CreationNouveauTicketPanel {
 		scrollPaneProduits.setViewportView(tableProduits);
 		tableProduits.setBorder(new LineBorder(new Color(0, 0, 0)));
 		tableProduits.setModel(DbUtils
-				.resultSetToTableModel(ProduitsActions.getAllProduitBySatusResultSet("En stock", "A commander")));
+				.resultSetToTableModel(ProduitsActions.getAllProduitByStatusResultSet("En stock", "A commander")));
 
 		JLabel lblNewLabel_3 = new JLabel("Quantit\u00E9");
 		lblNewLabel_3.setFont(new Font("Tahoma", Font.BOLD, 12));
@@ -129,9 +165,7 @@ public class CreationNouveauTicketPanel {
 		JButton btnAjouterAuPanier = new JButton("Ajouter au \r\npanier");
 		btnAjouterAuPanier.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String nomProduit = tableProduits
-						.getValueAt(tableProduits.getSelectedRow(), tableProduits.getColumn("Nom").getModelIndex())
-						.toString();
+				
 				String quantiteInputString = textField_Quantite.getText();
 				float quantiteInputFloat = Float.parseFloat(quantiteInputString);
 				String quantiteStockString = tableProduits
@@ -140,11 +174,17 @@ public class CreationNouveauTicketPanel {
 				float quantiteStockFloat = Float.parseFloat(quantiteStockString);
 				
 				if(quantiteInputFloat <= quantiteStockFloat) {
+					String nomProduit = tableProduits
+							.getValueAt(tableProduits.getSelectedRow(), tableProduits.getColumn("Nom").getModelIndex())
+							.toString();
+					String uniteProduit = tableProduits
+							.getValueAt(tableProduits.getSelectedRow(), tableProduits.getColumn("Unité_Mesure").getModelIndex())
+							.toString();
 					float montantFloat = Float.parseFloat(tableProduits
 							.getValueAt(tableProduits.getSelectedRow(), tableProduits.getColumn("Prix").getModelIndex())
 							.toString()) * Integer.parseInt(quantiteInputString);
 					String montantString = Float.toString(montantFloat);
-					modelTablePanier.addRow(new Object[] { nomProduit, quantiteInputString, montantString });
+					modelTablePanier.addRow(new Object[] { nomProduit, quantiteInputString, uniteProduit, montantString });
 					
 					// Ajouter le produit choisi dans la table des produits en panier
 					String indexProduitString = tableProduits
@@ -153,9 +193,13 @@ public class CreationNouveauTicketPanel {
 					int indexProduitInt = Integer.parseInt(indexProduitString);
 					indexProduitsDansPanier.add(indexProduitInt);
 					
-					// Modifié la quantité du stock dans JTable tableProduits
+					// Modifier la quantité du stock dans JTable tableProduits
 					quantiteStockFloat -= quantiteInputFloat;
 					tableProduits.getModel().setValueAt(quantiteStockFloat, tableProduits.getSelectedRow(), tableProduits.getColumn("Stock").getModelIndex());
+					
+					// Modifier le montant total
+					montantTotal += montantFloat;
+					lblEur.setText(Float.toString(montantTotal) + " EUR    ");
 				} else {
 					JOptionPane.showMessageDialog(panel, "La quantité saisie est supérieure que le stock. Veuillez réessayer !", "Attention", JOptionPane.ERROR_MESSAGE);
 				}
@@ -195,5 +239,9 @@ public class CreationNouveauTicketPanel {
 
 	public JPanel getPanel() {
 		return panel;
+	}
+
+	public Utilisateurs getUser() {
+		return user;
 	}
 }
