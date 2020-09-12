@@ -27,6 +27,7 @@ import javax.swing.ListModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import java.awt.Insets;
@@ -112,12 +113,44 @@ public class ModificationQuantiteStockPanel {
 					}
 				}
 		);
-		
-		panel.add(listeProduitRecherche);
+	
 		
 		JButton btnNewButton = new JButton("Enregistrer les modifications");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				
+				if (listeProduitRecherche.getSelectedValue() != null && !ModifQuantiteProduit_Quantite.getText().equals("") && !ModifierQuantiteProduitPrix.getText().equals(""))
+				{
+					valeurSelected = listeProduitRecherche.getSelectedValue().toString();
+					
+					Produits p = null;
+					
+					// parcourir la liste des produits de la BDD pour retrouver celui qui a été selectionné par l'utilisateur et qu'on doit modifier
+					List<Produits> listeProduitDB = new ArrayList<Produits>();
+					
+					listeProduitDB = ProduitsActions.getProduitsDB();
+					
+					for (Produits prod : listeProduitDB)
+					{
+						if (prod.getProd_nom().equals(valeurSelected))
+						{
+							p = prod;
+						}
+					}
+					
+					ProduitsActions.modifierStockProduit(Float.valueOf(ModifQuantiteProduit_Quantite.getText().toString()), Float.valueOf(ModifierQuantiteProduitPrix.getText().toString()), p);
+					
+					valeurSelected = listeProduitRecherche.getSelectedValue().toString();
+					
+					jTableQuantitePrix.setModel(DbUtils.resultSetToTableModel(ProduitsActions.getProduitSingle(valeurSelected)));
+					
+					JOptionPane.showMessageDialog(null, "Les modifications ont bien été prises en compte !", "Modification Stock !", JOptionPane.INFORMATION_MESSAGE);
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null, "Il faut remplir tous les champs !", "Erreur !", JOptionPane.INFORMATION_MESSAGE);
+				}
+				
 			}
 		});
 		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -180,9 +213,13 @@ public class ModificationQuantiteStockPanel {
 		jTableQuantitePrix.setModel(DbUtils.resultSetToTableModel(ProduitsActions.getProduitSingle("")));
 
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(360, 220, 462, 121);
+		scrollPane_1.setBounds(333, 220, 508, 121);
 		scrollPane_1.setViewportView(jTableQuantitePrix);
 		panel.add(scrollPane_1);
+		
+		JScrollPane scrollPane = new JScrollPane(listeProduitRecherche);
+		scrollPane.setBounds(26, 219, 297, 122);
+		panel.add(scrollPane);
 	}
 	
 	public JPanel getPanel() {
