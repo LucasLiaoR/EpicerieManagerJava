@@ -136,9 +136,6 @@ public class AffichageFichierUtilisateurPanel {
 							
 							idRecherche = Integer.parseInt(idString);
 							
-							System.out.println(idRecherche);
-
-							
 							table.setModel(DbUtils.resultSetToTableModel(UtilisateursActions.getUtilisateurSingle(idRecherche)));
 						}
 						else

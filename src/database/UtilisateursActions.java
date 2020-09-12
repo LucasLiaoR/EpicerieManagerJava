@@ -97,8 +97,6 @@ public class UtilisateursActions {
 		
 		for (Utilisateurs u : liste)
 		{
-			System.out.println(id + " - " + u.getId());
-			
 			if (u.getMdp().toString().equals(pass) && u.getId() == id)
 			{
 				return u;
