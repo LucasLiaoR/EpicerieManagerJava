@@ -40,7 +40,7 @@ public class InterfaceUtilisateur implements Runnable {
 	private JPanel panelParcourirFichierClient;
 	private JPanel panelAjouterNouveauClient;
 	private JPanel panelAffichageTickets;
-	private Utilisateurs user;
+	private static Utilisateurs user;
 	
 	public void run() {
 		try {
@@ -276,5 +276,10 @@ public class InterfaceUtilisateur implements Runnable {
 	public Utilisateurs getUser()
 	{
 		return user;
+	}
+	
+	public static void setUser(Utilisateurs u)
+	{
+		user = u;
 	}
 }

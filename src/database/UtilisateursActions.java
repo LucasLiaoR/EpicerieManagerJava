@@ -86,7 +86,25 @@ public class UtilisateursActions {
 	}
 	
 	
-	
+	public static Utilisateurs authentificationUtilisateur(String pass, int id)
+	{
+		List<Utilisateurs> liste = new ArrayList<Utilisateurs>();
+		
+		liste = getUtilisateurs();
+		
+		
+		for (Utilisateurs u : liste)
+		{
+			
+			if (u.getMdp().toString().equals(pass) && u.getId() + 1 == id)
+			{
+				return u;
+			}
+		}
+
+		return null;
+		
+	}
 	
 	
 	

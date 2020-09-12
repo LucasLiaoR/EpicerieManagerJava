@@ -19,6 +19,7 @@ import javax.swing.JTextField;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -36,6 +37,8 @@ public class AffichageFichierUtilisateurPanel {
 	public static DefaultListModel listRecherche = new DefaultListModel();
 	public static List<Utilisateurs> listeUtilisateursDB = new ArrayList<Utilisateurs>();
 	private static String valeurSelected;
+	public static int idRecherche = 1;
+	
 	/**
 	 * @wbp.nonvisual location=-43,159
 	 */
@@ -76,10 +79,14 @@ public class AffichageFichierUtilisateurPanel {
 		textFieldPrenom.setBounds(183, 110, 163, 33);
 		panel.add(textFieldPrenom);
 		
+		JList list = new JList(listRecherche);
+		list.setBounds(28, 219, 475, 267);
+		
 		JButton btnNewButton = new JButton("Rechercher un utilisateur");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
+				listRecherche.clear();
 				
 				if (!textFieldNom.getText().toString().equals("") && !textFieldPrenom.getText().toString().equals(""))
 				{
@@ -97,15 +104,16 @@ public class AffichageFichierUtilisateurPanel {
 					}
 				}
 				
+				list.updateUI();
+				
 			}
 		});
 		
 		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		btnNewButton.setBounds(82, 157, 183, 30);
+		btnNewButton.setBounds(99, 170, 183, 30);
 		panel.add(btnNewButton);
 		
-		JList list = new JList(listRecherche);
-		list.setBounds(28, 219, 475, 267);
+		
 		
 		list.addListSelectionListener(
 				new ListSelectionListener() {
@@ -115,12 +123,21 @@ public class AffichageFichierUtilisateurPanel {
 						{
 							valeurSelected = list.getSelectedValue().toString();
 							
-							int idRecherche = 1;
 							
-							for (int i = 0; i<5;i++)
+							String idString = "";
+							int i = 0;
+						
+							
+							while (valeurSelected.charAt(i) != ' ')
 							{
-								
+								idString = idString + valeurSelected.charAt(i);
+								i++;
 							}
+							
+							idRecherche = Integer.parseInt(idString);
+							idRecherche++;
+
+						
 							
 							table.setModel(DbUtils.resultSetToTableModel(UtilisateursActions.getUtilisateurSingle(idRecherche)));
 						}
@@ -144,6 +161,26 @@ public class AffichageFichierUtilisateurPanel {
 		panel.add(lblNewLabel_3);
 		
 		JButton btnNewButton_1 = new JButton("Selectionner l'utilisateur");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				if (list.getSelectedValue() != null)
+				{
+					String pass = JOptionPane.showInputDialog("Saisir le mot de passe").toString();
+					
+					Utilisateurs user = UtilisateursActions.authentificationUtilisateur(pass, idRecherche);
+					
+					if (user != null)
+					{
+						InterfaceUtilisateur.setUser(user);
+					}
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null, "Aucun utilisateur sélectionné !", "Erreur !", JOptionPane.INFORMATION_MESSAGE);
+				}
+			}
+		});
 		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnNewButton_1.setBounds(578, 453, 263, 33);
 		panel.add(btnNewButton_1);
