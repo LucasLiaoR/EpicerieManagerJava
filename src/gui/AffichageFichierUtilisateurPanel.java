@@ -174,6 +174,7 @@ public class AffichageFichierUtilisateurPanel {
 					{
 						InterfaceUtilisateur.setUser(user);
 						InterfaceUtilisateur.setLabelUser();
+						JOptionPane.showMessageDialog(null, "Changement d'utilisateur avec succès !", "Changement de user !", JOptionPane.INFORMATION_MESSAGE);
 					}
 					else
 					{
