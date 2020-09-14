@@ -63,7 +63,7 @@ public class ProduitsActions {
 		return listeProduits;
 	}
 	
-	public static ResultSet getProduitSingle(String nomProduit) {
+	public static ResultSet getProduitSingleByName(String nomProduit) {
 		ResultSet getProduitSingle = null;
 
 		try {
@@ -88,6 +88,34 @@ public class ProduitsActions {
 			e.printStackTrace();
 		}
 		return getProduitSingle;
+	}
+	
+	public static Produits getProduitSingleById(int id) {
+		Produits p = null;
+
+		try {
+			Connection cnx = DBConnection.ConnectToDatabase();
+
+			Statement st = cnx.createStatement();
+
+			// Recuperer et ajouter tous les tickets
+			ResultSet getProduitSingle = st.executeQuery("SELECT * FROM produits WHERE prod_id = '" + Integer.toString(id) + "'");
+			if (getProduitSingle.next()) {
+				int prod_id = getProduitSingle.getInt("prod_id");
+				String prod_nom = getProduitSingle.getString("prod_nom");
+				String prod_description = getProduitSingle.getString("prod_description");
+				int prod_prix_vente_ttc = getProduitSingle.getInt("prod_prix_vente_ttc");
+				int prod_quantite_min = getProduitSingle.getInt("prod_quantite_min");
+				int prod_quantite_stock = getProduitSingle.getInt("prod_quantite_stock");
+				String prod_unite = getProduitSingle.getString("prod_unite");
+				String prod_statut = getProduitSingle.getString("prod_statut");
+				int prod_cate_id = getProduitSingle.getInt("cate_id");
+				p = new Produits(prod_id, prod_nom, prod_description, prod_prix_vente_ttc, prod_quantite_min, prod_quantite_stock, prod_unite, prod_statut, prod_cate_id);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return p;
 	}
 	
 	public static ResultSet getAllProduitByStatusResultSet(String... status) {
@@ -126,7 +154,7 @@ public class ProduitsActions {
 		return getProduitSingle;
 	}
 	
-	public static void modifierStockProduit(float montantModif, float prix,Produits produit)
+	public static void modifierStockEtPrixProduit(float montantModif, float prix,Produits produit)
 	{
 		try {
 			Connection cnx = DBConnection.ConnectToDatabase();
@@ -159,5 +187,34 @@ public class ProduitsActions {
 			e.printStackTrace();
 		}
 
+	}
+	
+	public static void modifierStockProduit(float montantModif,Produits produit)
+	{
+		try {
+			Connection cnx = DBConnection.ConnectToDatabase();
+
+			Statement st = cnx.createStatement();
+			
+			String statut;
+			
+			if (produit.getProd_quantite_stock() + montantModif < produit.getProd_quantite_min())
+			{
+				statut = "A commander";
+			}
+			else if (produit.getProd_quantite_stock() + montantModif >= produit.getProd_quantite_min())
+			{
+				statut = "En stock";
+			}
+			else
+			{
+				statut = "Rupture";
+			}
+
+			st.executeUpdate("UPDATE produits SET prod_quantite_stock = prod_quantite_stock + " + montantModif + " WHERE prod_id = " + produit.getProd_id() + ";");
+			st.executeUpdate("UPDATE produits SET prod_statut = '" + statut + "' WHERE prod_id = " + produit.getProd_id() + ";");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

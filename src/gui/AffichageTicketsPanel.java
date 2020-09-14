@@ -9,15 +9,23 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import database.TicketsActions;
+import database.TicketsProduitsActions;
 import fr.sql.utilities.DbUtils;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.ListSelectionModel;
 
 public class AffichageTicketsPanel {
 	private JPanel panel;
+	private static final int NO_ROW_SELECTED = -1;
+	private JScrollPane scrollPane_1;
+	private JTable tableProduitsDansTicket;
+	private JTable tableTickets;
 	
 	public AffichageTicketsPanel ()
 	{
@@ -36,20 +44,28 @@ public class AffichageTicketsPanel {
 		scrollPane.setBounds(10, 70, 408, 411);
 		panel.add(scrollPane);
 		
-		JTable tableTickets = new JTable();
-		tableTickets.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				System.out.println(tableTickets.getValueAt(tableTickets.getSelectedRow(), 0).toString());
+		tableTickets = new JTable();
+		tableTickets.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent event) {
+				if(tableTickets.getSelectedRow() != NO_ROW_SELECTED) {
+					String idSelectedTicket = tableTickets
+							.getValueAt(tableTickets.getSelectedRow(), tableTickets.getColumn("Id").getModelIndex())
+							.toString();
+					tableProduitsDansTicket.setModel(DbUtils.resultSetToTableModel(TicketsProduitsActions.getTicketProduitsByTicketId(idSelectedTicket)));
+				}
 			}
 		});
+		tableTickets.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setViewportView(tableTickets);
 		
 		tableTickets.setModel(DbUtils.resultSetToTableModel(TicketsActions.getTicketsResultSet()));
 		
-		JTable listProduits = new JTable();
-		listProduits.setBounds(433, 70, 408, 411);
-		panel.add(listProduits);
+		scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(433, 70, 408, 411);
+		panel.add(scrollPane_1);
+		
+		tableProduitsDansTicket = new JTable();
+		scrollPane_1.setViewportView(tableProduitsDansTicket);
 		
 		JLabel ticketsLabel = new JLabel("Tickets");
 		ticketsLabel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 12));
