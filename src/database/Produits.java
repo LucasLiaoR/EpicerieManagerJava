@@ -12,7 +12,7 @@ public class Produits implements Serializable{
 	private int prod_id;
 	private String prod_nom;
 	private String prod_description;
-	private int prod_prix_vente_ttc;
+	private float prod_prix_vente_ttc;
 	private int prod_quantite_min;
 	private int prod_quantite_stock;
 	private String prod_unite;
@@ -32,7 +32,7 @@ public class Produits implements Serializable{
 				+ ");";
 	}
 	
-	public Produits(int id, String nom, String desc, int prixVente, int qteMin, int qteStock, String unite, String statut, int cateID)
+	public Produits(int id, String nom, String desc, float prixVente, int qteMin, int qteStock, String unite, String statut, int cateID)
 	{
 		this.prod_id = id;
 		this.prod_nom = nom;
@@ -57,7 +57,7 @@ public class Produits implements Serializable{
 	public void setProd_nom(String prod_nom) {
 		this.prod_nom = prod_nom;
 	}
-	public int getProd_prix_vente_ttc() {
+	public float getProd_prix_vente_ttc() {
 		return prod_prix_vente_ttc;
 	}
 	public void setProd_prix_vente_ttc(int prod_prix_vente_ttc) {

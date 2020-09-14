@@ -43,6 +43,7 @@ public class InterfaceUtilisateur implements Runnable {
 	private JPanel panelParcourirFichierClient;
 	private JPanel panelAjouterNouveauClient;
 	private JPanel panelAffichageTickets;
+	private JPanel panelDashboardInventaire;
 	public static JLabel labelUtilisateurCo;
 	private static Utilisateurs user;
 	
@@ -195,6 +196,17 @@ public class InterfaceUtilisateur implements Runnable {
 		btnModifierQuantite.setMargin(new Insets(2, 2, 2, 2));
 		btnModifierQuantite.setBounds(10, 76, 142, 31);
 		panelGestionStock.add(btnModifierQuantite);
+		
+		JButton btnDashboard = new JButton("Dashboard");
+		btnDashboard.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				panelDashboardInventaire = new DashBoardInventaire().getPanel(); // Rafraichir l'historique de transaction chaque fois pour avoir les nouveaux tickets
+				switchPanels(panelDashboardInventaire);
+			}
+		});
+		btnDashboard.setMargin(new Insets(2, 2, 2, 2));
+		btnDashboard.setBounds(10, 118, 142, 31);
+		panelGestionStock.add(btnDashboard);
 		
 		JPanel panelGestionCaisse = new JPanel();
 		panelGestionCaisse.setLayout(null);
