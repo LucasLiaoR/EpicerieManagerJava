@@ -120,7 +120,7 @@ public class ProduitsActions {
 	
 	public static ResultSet getAllProduits()
 	{
-		ResultSet getProduitSingle = null;
+		ResultSet getAllProduits = null;
 
 		try {
 			Connection cnx = DBConnection.ConnectToDatabase();
@@ -128,7 +128,7 @@ public class ProduitsActions {
 			Statement st = cnx.createStatement();
 
 			// Recuperer et ajouter tous les produits
-			getProduitSingle = st.executeQuery("SELECT " + 
+			getAllProduits = st.executeQuery("SELECT " + 
 					"	 prod_id AS Id," +
 					"    prod_nom AS Nom," + 
 					"    prod_prix_vente_ttc AS Prix," + 
@@ -141,7 +141,59 @@ public class ProduitsActions {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return getProduitSingle;
+		return getAllProduits;
+	}
+	
+	public static ResultSet getProduitsRupture()
+	{
+		ResultSet getProduitsRupture = null;
+
+		try {
+			Connection cnx = DBConnection.ConnectToDatabase();
+
+			Statement st = cnx.createStatement();
+
+			// Recuperer et ajouter tous les produits
+			getProduitsRupture = st.executeQuery("SELECT " + 
+					"	 prod_id AS Id," +
+					"    prod_nom AS Nom," + 
+					"    prod_prix_vente_ttc AS Prix," + 
+					"    prod_quantite_min AS Quantité_min," + 
+					"    prod_quantite_stock AS Stock," + 
+					"    prod_unite AS Unité_Mesure," +
+					"    prod_statut AS Statut " +
+					"FROM" + 
+					"    produits WHERE prod_statut = 'Rupture'");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return getProduitsRupture;
+	}
+	
+	public static ResultSet getProduitsACommander()
+	{
+		ResultSet getProduitsACommander = null;
+
+		try {
+			Connection cnx = DBConnection.ConnectToDatabase();
+
+			Statement st = cnx.createStatement();
+
+			// Recuperer et ajouter tous les produits
+			getProduitsACommander = st.executeQuery("SELECT " + 
+					"	 prod_id AS Id," +
+					"    prod_nom AS Nom," + 
+					"    prod_prix_vente_ttc AS Prix," + 
+					"    prod_quantite_min AS Quantité_min," + 
+					"    prod_quantite_stock AS Stock," + 
+					"    prod_unite AS Unité_Mesure," +
+					"    prod_statut AS Statut " +
+					"FROM" + 
+					"    produits WHERE prod_quantite_stock < prod_quantite_min");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return getProduitsACommander;
 	}
 	
 	public static ResultSet getAllProduitByStatusResultSet(String... status) {
