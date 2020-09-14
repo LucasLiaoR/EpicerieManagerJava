@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TicketsActions {
-	public static boolean ajouterTicket(Timestamp date, String statut, String commentaire, int idUtilisateur) {
+	public static boolean ajouterTicket(String statut, String commentaire, float montant, int idUtilisateur) {
 		try {
 			Connection cnx = DBConnection.ConnectToDatabase();
 			Statement st = cnx.createStatement();
 
-			Tickets t = new Tickets(date, statut, commentaire, idUtilisateur);
+			Tickets t = new Tickets(statut, commentaire, montant, idUtilisateur);
 			String insertStatement = t.createInsertStatement();
 
 			st.execute(insertStatement);
@@ -66,8 +66,9 @@ public class TicketsActions {
 				Timestamp date = resTickets.getTimestamp("tckt_date");
 				String statut = resTickets.getString("tck_statut");
 				String commentaire = resTickets.getString("tckt_commentaire");
+				float montant = resTickets.getFloat("tckt_commentaire");
 				int idUtilisateur = resTickets.getInt("utls_id");
-				Tickets t = new Tickets(date, statut, commentaire, idUtilisateur);
+				Tickets t = new Tickets(date, statut, commentaire, montant, idUtilisateur);
 				listTickets.add(t);
 			}
 			cnx.close();
@@ -76,14 +77,26 @@ public class TicketsActions {
 		}
 		return listTickets;
 	}
+	
+	public static int getLastInsertIdTicket() {
+		int lastInsertId = -1;
+		try {
+			Connection cnx = DBConnection.ConnectToDatabase();
 
-	public static void insererNouveauTicket() {
-		// TODO Auto-generated method stub
-		
+			Statement st = cnx.createStatement();
+
+			ResultSet resTickets = st.executeQuery("SELECT MAX(tckt_id) AS MAX_ID FROM tickets;");
+			if(resTickets.next()) {
+				lastInsertId = resTickets.getInt("MAX_ID");
+			}
+			cnx.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return lastInsertId;
 	}
-
-	public static void insererTicketsProduits() {
-		// TODO Auto-generated method stub
-		
+	
+	public static int getNextInsertIdTicket() {
+		return getLastInsertIdTicket() + 1;
 	}
 }

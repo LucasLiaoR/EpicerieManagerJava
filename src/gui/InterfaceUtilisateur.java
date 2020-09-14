@@ -24,10 +24,12 @@ import javax.swing.border.MatteBorder;
 
 import database.Utilisateurs;
 import database.UtilisateursActions;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 public class InterfaceUtilisateur implements Runnable {
 
-	private JFrame frmAjoutDunNouveau;
+	private static JFrame frmAjoutDunNouveau;
 	private final JPanel TopPanel = new JPanel();
 	private JTextField dateHeure;
 	private JTextField headText;
@@ -47,7 +49,7 @@ public class InterfaceUtilisateur implements Runnable {
 	public void run() {
 		try {
 			InterfaceUtilisateur window = new InterfaceUtilisateur(user);
-			window.frmAjoutDunNouveau.setVisible(true);
+			InterfaceUtilisateur.frmAjoutDunNouveau.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -57,7 +59,7 @@ public class InterfaceUtilisateur implements Runnable {
 	 * Create the application.
 	 */
 	public InterfaceUtilisateur(Utilisateurs u) {
-		this.user = u;
+		InterfaceUtilisateur.user = u;
 		initialize();
 	}
 
@@ -72,6 +74,13 @@ public class InterfaceUtilisateur implements Runnable {
 	
 	private void initialize() {
 		frmAjoutDunNouveau = new JFrame();
+		frmAjoutDunNouveau.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentShown(ComponentEvent e) {
+				panelCreerNouveauTicket = new CreationNouveauTicketPanel().getPanel(); // Afficher toujours le panel panelCreerNouveauTicket en premier
+				switchPanels(panelCreerNouveauTicket);
+			}
+		});
 		frmAjoutDunNouveau.setTitle("Epicerie Manager");
 		frmAjoutDunNouveau.setBounds(100, 100, 1048, 589);
 		frmAjoutDunNouveau.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -128,7 +137,7 @@ public class InterfaceUtilisateur implements Runnable {
 		frmAjoutDunNouveau.getContentPane().add(PanelsStack);
 		PanelsStack.setLayout(new CardLayout(0, 0));
 		
-		panelCreerNouveauTicket = new CreationNouveauTicketPanel(user).getPanel();
+		panelCreerNouveauTicket = new CreationNouveauTicketPanel().getPanel();
 		PanelsStack.add(panelCreerNouveauTicket, "name_6306682648400");
 		
 		panelAjouterProduit = new AjoutProduitPanel().getPanel();
@@ -215,6 +224,7 @@ public class InterfaceUtilisateur implements Runnable {
 		JButton btnHistoriqueDeTransaction = new JButton("Historique de transaction");
 		btnHistoriqueDeTransaction.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				panelAffichageTickets = new AffichageTicketsPanel().getPanel(); // Rafraichir l'historique de transaction chaque fois pour avoir les nouveaux tickets
 				switchPanels(panelAffichageTickets);
 			}
 		});
@@ -295,5 +305,13 @@ public class InterfaceUtilisateur implements Runnable {
 	public static void setLabelUser()
 	{
 		labelUtilisateurCo.setText("Utilisateur connecté : " + getUser().getPrenom() + " - " + getUser().getNom());
+	}
+	
+	public static void setVisible (boolean isVisible) {
+		frmAjoutDunNouveau.setVisible(isVisible);
+	}
+	
+	public static boolean isVisible() {
+		return frmAjoutDunNouveau.isVisible();
 	}
 }

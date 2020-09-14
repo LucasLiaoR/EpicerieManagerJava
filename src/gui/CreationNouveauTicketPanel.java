@@ -11,7 +11,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 
 import database.ProduitsActions;
+import database.TicketProduitSingle;
 import database.Tickets;
+import database.TicketsActions;
 import database.Utilisateurs;
 import fr.sql.utilities.DbUtils;
 import fr.sql.utilities.MyTableModel;
@@ -32,19 +34,21 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.ListSelectionModel;
 
 public class CreationNouveauTicketPanel {
 	private JPanel panel;
-	private Utilisateurs user;
 	private JTextField textField_Quantite;
 	private JLabel lbNomProduitChoisi;
 	private float montantTotal;
-	private List<Integer> indexProduitsDansPanier = new ArrayList<Integer>();
+	private List<TicketProduitSingle> indexProduitsDansPanierAvecQuantite = new ArrayList<TicketProduitSingle>();
 	private JTable tablePanier;
 	private MyTableModel modelTablePanier;
+	private JTable tableProduits;
+	private JLabel numTicketCourantLabel;
+	private JLabel lblEur;
 
-	public CreationNouveauTicketPanel(Utilisateurs u) {
-		this.user = u;
+	public CreationNouveauTicketPanel() {
 		initialize();
 	}
 	
@@ -82,9 +86,13 @@ public class CreationNouveauTicketPanel {
 		JButton btnNewButton = new JButton("Encaisser le panier");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JFrame topFrame = (JFrame)SwingUtilities.windowForComponent(panel);
-				topFrame.setVisible(false);
-				SwingUtilities.invokeLater(new EncaissementPanierFrame(indexProduitsDansPanier, modelTablePanier, montantTotal, getUser()));
+				if(indexProduitsDansPanierAvecQuantite.isEmpty()) {
+					JOptionPane.showMessageDialog(panel, "Aucun produit à encaisser. Veuillez réessayer !", "Attention", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				InterfaceUtilisateur.setVisible(false);
+				SwingUtilities.invokeLater(new EncaissementPanierFrame(indexProduitsDansPanierAvecQuantite, modelTablePanier, montantTotal));
 			}
 		});
 		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -115,7 +123,7 @@ public class CreationNouveauTicketPanel {
 		lblMontantTotal.setBounds(10, 361, 110, 21);
 		panel_1.add(lblMontantTotal);
 		
-		JLabel lblEur = new JLabel("0 EUR    ");
+		lblEur = new JLabel("0 EUR    ");
 		lblEur.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblEur.setOpaque(true);
 		lblEur.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -133,7 +141,8 @@ public class CreationNouveauTicketPanel {
 		scrollPaneProduits.setBounds(10, 29, 556, 274);
 		panel_2.add(scrollPaneProduits);
 
-		JTable tableProduits = new JTable();
+		tableProduits = new JTable();
+		tableProduits.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableProduits.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -165,6 +174,15 @@ public class CreationNouveauTicketPanel {
 		JButton btnAjouterAuPanier = new JButton("Ajouter au \r\npanier");
 		btnAjouterAuPanier.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(tableProduits.getSelectedRow() == -1) {
+					JOptionPane.showMessageDialog(panel, "Aucun produit choisi. Veuillez réessayer !", "Attention", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				if(textField_Quantite.getText().isBlank() || textField_Quantite.getText().isEmpty() || !isPositiveNumber(textField_Quantite.getText())) {
+					JOptionPane.showMessageDialog(panel, "La quntité doit être une valeur numérique et positive. Veuillez réessayer !", "Attention", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 				
 				String quantiteInputString = textField_Quantite.getText();
 				float quantiteInputFloat = Float.parseFloat(quantiteInputString);
@@ -191,7 +209,10 @@ public class CreationNouveauTicketPanel {
 							.getValueAt(tableProduits.getSelectedRow(), tableProduits.getColumn("Id").getModelIndex())
 							.toString();
 					int indexProduitInt = Integer.parseInt(indexProduitString);
-					indexProduitsDansPanier.add(indexProduitInt);
+					TicketProduitSingle tps = new TicketProduitSingle();
+					tps.produitId = indexProduitInt;
+					tps.quantite = quantiteInputFloat;
+					indexProduitsDansPanierAvecQuantite.add(tps);
 					
 					// Modifier la quantité du stock dans JTable tableProduits
 					quantiteStockFloat -= quantiteInputFloat;
@@ -200,6 +221,9 @@ public class CreationNouveauTicketPanel {
 					// Modifier le montant total
 					montantTotal += montantFloat;
 					lblEur.setText(Float.toString(montantTotal) + " EUR    ");
+					
+					// Clear selection produit
+					clearSelectionTableProduits();
 				} else {
 					JOptionPane.showMessageDialog(panel, "La quantité saisie est supérieure que le stock. Veuillez réessayer !", "Attention", JOptionPane.ERROR_MESSAGE);
 				}
@@ -229,7 +253,8 @@ public class CreationNouveauTicketPanel {
 		lbNomProduitChoisi.setBounds(20, 350, 212, 19);
 		panel_2.add(lbNomProduitChoisi);
 
-		JLabel numTicketCourantLabel = new JLabel("Numero ticket courant");
+		numTicketCourantLabel = new JLabel("N° " + TicketsActions.getNextInsertIdTicket());
+		numTicketCourantLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		numTicketCourantLabel.setOpaque(true);
 		numTicketCourantLabel.setBackground(SystemColor.info);
 		numTicketCourantLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -240,8 +265,36 @@ public class CreationNouveauTicketPanel {
 	public JPanel getPanel() {
 		return panel;
 	}
-
-	public Utilisateurs getUser() {
-		return user;
+	
+	public void clearSelectionTableProduits() {
+		tableProduits.clearSelection();
+		textField_Quantite.setText("");
+		lbNomProduitChoisi.setText("Aucun produit choisi");
+	}
+	
+	public void resetAllFields() {
+		clearSelectionTableProduits(); // Clear selection produit
+		numTicketCourantLabel.setText("N° " + TicketsActions.getNextInsertIdTicket()); // Recuperer le nouveau no de ticket
+		modelTablePanier.setRowCount(0); // Clear table panier
+		// Clear montant total
+		montantTotal = 0;
+		lblEur.setText(Float.toString(montantTotal) + " EUR    ");
+		// Clear table produits choisis
+		indexProduitsDansPanierAvecQuantite.clear();
+	}
+	
+	public boolean isPositiveNumber (String s) {
+		boolean isPositiveNumber = false;
+		try {
+		    float value = Float.parseFloat(s);
+		    if(value > 0) {
+		    	isPositiveNumber = true;
+		    } else {
+		    	isPositiveNumber = false;
+		    }
+		} catch (NumberFormatException e) {
+			isPositiveNumber = false;
+		}
+		return isPositiveNumber;
 	}
 }

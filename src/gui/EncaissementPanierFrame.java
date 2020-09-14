@@ -28,11 +28,14 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
+import javax.swing.WindowConstants;
 import javax.swing.border.LineBorder;
 
 import database.ProduitsActions;
+import database.TicketProduitSingle;
 import database.Tickets;
 import database.TicketsActions;
+import database.TicketsProduitsActions;
 import database.Utilisateurs;
 import fr.sql.utilities.DbUtils;
 import fr.sql.utilities.MyTableModel;
@@ -50,16 +53,17 @@ import javax.swing.border.MatteBorder;
 import javax.swing.border.EtchedBorder;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowAdapter;
 
 public class EncaissementPanierFrame implements Runnable {
-	
+
 	private JFrame encaissementPanierFrame;
-	private List<Integer> indexProduitsDansPanier;
+	private List<TicketProduitSingle> indexProduitsDansPanierAvecQuantite;
 	private MyTableModel tableProduitsData;
 	private float montantPanier;
 	private float montantAPayer;
 	private float montantARendre;
-	private Utilisateurs user;
 	private JPanel TopPanel;
 	private JTextField dateHeure;
 	private JTextField headText;
@@ -72,10 +76,13 @@ public class EncaissementPanierFrame implements Runnable {
 	private JButton btnEncaisser;
 	private JLabel label_MontantAPayer;
 	private JLabel label_MontantARendre;
-	
+	private final static int INSERT_OK = 1;
+	private final static int INSERT_CANCELLED = 0;
+
 	public void run() {
 		try {
-			EncaissementPanierFrame window = new EncaissementPanierFrame(indexProduitsDansPanier, tableProduitsData, montantPanier, user);
+			EncaissementPanierFrame window = new EncaissementPanierFrame(indexProduitsDansPanierAvecQuantite,
+					tableProduitsData, montantPanier);
 			window.encaissementPanierFrame.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -85,96 +92,114 @@ public class EncaissementPanierFrame implements Runnable {
 	/**
 	 * Create the application.
 	 */
-	public EncaissementPanierFrame(List<Integer> list, MyTableModel tableData, float montant, Utilisateurs u) {
-		this.user = u;
-		this.indexProduitsDansPanier = list;
+	public EncaissementPanierFrame(List<TicketProduitSingle> list, MyTableModel tableData, float montant) {
+		this.indexProduitsDansPanierAvecQuantite = list;
 		this.tableProduitsData = tableData;
 		this.montantPanier = montant;
 		montantAPayer = this.montantPanier;
 		montantARendre = 0;
 		initialize();
 	}
-	
-	public void ticktock()
-	{
+
+	public void ticktock() {
 		dateHeure.setText(DateFormat.getDateTimeInstance().format(new Date()));
 	}
 
 	private void initialize() {
 		encaissementPanierFrame = new JFrame();
+		encaissementPanierFrame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				if (montantAPayer > 0) {
+					int reponse = JOptionPane.showConfirmDialog(encaissementPanierFrame,
+							"Voulez-vous annuler cette transaction ?", "Attention", JOptionPane.YES_NO_OPTION);
+					if (reponse == JOptionPane.YES_OPTION) {
+//						JOptionPane.showMessageDialog(encaissementPanierFrame,
+//								"Transaction annulée. Vous pourriez la retrouver dans le menu 'Historique de transactions'.",
+//								"Information", JOptionPane.PLAIN_MESSAGE);
+						int resultat = creerEtAjouterTicket("annulé");
+						if(resultat == INSERT_OK) {
+							InterfaceUtilisateur.setVisible(true);
+							encaissementPanierFrame.dispose();
+						}
+					}
+				}
+
+			}
+		});
 		encaissementPanierFrame.setTitle("Epicerie Manager - Encaissement");
 		encaissementPanierFrame.setBounds(100, 100, 1048, 589);
-		encaissementPanierFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		encaissementPanierFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		encaissementPanierFrame.getContentPane().setLayout(null);
 		TopPanel = new JPanel();
 		TopPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		TopPanel.setBounds(0, 0, 1032, 39);
 		encaissementPanierFrame.getContentPane().add(TopPanel);
 		TopPanel.setLayout(null);
-		
+
 		dateHeure = new JTextField();
 		dateHeure.setHorizontalAlignment(SwingConstants.CENTER);
 		dateHeure.setEditable(false);
 		dateHeure.setBounds(10, 11, 164, 18);
 		TopPanel.add(dateHeure);
 		dateHeure.setColumns(10);
-		
+
 		Timer timer = new Timer(1000, new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e)
-			{
+			public void actionPerformed(ActionEvent e) {
 				ticktock();
 			}
 		});
-		
+
 		timer.setRepeats(true);
-        timer.setCoalesce(true);
-        timer.setInitialDelay(0);
-        timer.start();
-        
-        headText = new JTextField();
+		timer.setCoalesce(true);
+		timer.setInitialDelay(0);
+		timer.start();
+
+		headText = new JTextField();
 		headText.setEditable(false);
 		headText.setFont(new Font("Tahoma", Font.BOLD, 11));
 		headText.setText("Projet Java - Outil Caisse/Inventaire d'\u00E9picerie");
 		headText.setColumns(10);
 		headText.setBounds(257, 11, 275, 18);
 		TopPanel.add(headText);
-		
+
 		JLabel labelUtilisateurCo = new JLabel("Utilisateur connect\u00E9 : ");
 		labelUtilisateurCo.setHorizontalAlignment(SwingConstants.CENTER);
 		labelUtilisateurCo.setBorder(new LineBorder(new Color(0, 0, 0)));
 		labelUtilisateurCo.setBounds(757, 0, 275, 39);
-		labelUtilisateurCo.setText("Utilisateur connecté : " + getUser().getPrenom() + " - " + getUser().getNom());
+		labelUtilisateurCo.setText("Utilisateur connecté : " + InterfaceUtilisateur.getUser().getPrenom() + " - "
+				+ InterfaceUtilisateur.getUser().getNom());
 		TopPanel.add(labelUtilisateurCo);
-		
+
 		JLabel lblNumroDeCaisse = new JLabel("Num\u00E9ro de caisse :");
 		lblNumroDeCaisse.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNumroDeCaisse.setBorder(new LineBorder(new Color(0, 0, 0)));
 		lblNumroDeCaisse.setBounds(624, 0, 134, 39);
 		lblNumroDeCaisse.setText("Num\u00E9ro de caisse : 0");
 		TopPanel.add(lblNumroDeCaisse);
-		
+
 		JPanel panel = new JPanel();
-		panel.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
+		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel.setBounds(10, 63, 1012, 476);
 		encaissementPanierFrame.getContentPane().add(panel);
 		panel.setLayout(null);
-		
+
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
 		scrollPane.setBounds(0, 0, 353, 476);
 		panel.add(scrollPane);
-		
+
 		JTable table = new JTable();
 		scrollPane.setViewportView(table);
-		
+
 		table.setModel(this.tableProduitsData);
-		
+
 		JLabel lblNewLabel = new JLabel("Montant total");
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblNewLabel.setBounds(363, 0, 121, 34);
 		panel.add(lblNewLabel);
-		
+
 		lblEur = new JLabel(this.montantPanier + " EUR    ");
 		lblEur.setOpaque(true);
 		lblEur.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -182,7 +207,7 @@ public class EncaissementPanierFrame implements Runnable {
 		lblEur.setBackground(SystemColor.info);
 		lblEur.setBounds(363, 30, 161, 25);
 		panel.add(lblEur);
-		
+
 		BufferedImage billet5EurosImage = null;
 		BufferedImage billet10EurosImage = null;
 		BufferedImage billet20EurosImage = null;
@@ -212,24 +237,27 @@ public class EncaissementPanierFrame implements Runnable {
 			piece2EuroImage = ImageIO.read(new File("images/2_euros.png"));
 		} catch (IOException e1) {
 			e1.printStackTrace();
-		};
-		
+		}
+		;
+
 		layeredPane = new JLayeredPane();
 		layeredPane.setBounds(363, 98, 649, 342);
 		panel.add(layeredPane);
 		layeredPane.setLayout(new CardLayout(0, 0));
-		
+
 		panel_PaiementEnEspeces = new JPanel();
+		panel_PaiementEnEspeces.setBorder(new LineBorder(new Color(0, 0, 0)));
 		layeredPane.add(panel_PaiementEnEspeces, "name_134224807720499");
 		panel_PaiementEnEspeces.setLayout(null);
-		
+
 		JPanel panel_2 = new JPanel();
 		panel_2.setBounds(0, 123, 649, 219);
 		panel_PaiementEnEspeces.add(panel_2);
 		panel_2.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel_2.setLayout(null);
-		
-		JLabel label_1Centime = new JLabel(new ImageIcon(piece1CentimesImage.getScaledInstance(80, 80, Image.SCALE_FAST)));
+
+		JLabel label_1Centime = new JLabel(
+				new ImageIcon(piece1CentimesImage.getScaledInstance(80, 80, Image.SCALE_FAST)));
 		label_1Centime.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -239,8 +267,9 @@ public class EncaissementPanierFrame implements Runnable {
 		label_1Centime.setBorder(new LineBorder(new Color(0, 0, 0)));
 		label_1Centime.setBounds(0, 0, 80, 80);
 		panel_2.add(label_1Centime);
-		
-		JLabel label_2Centimes = new JLabel(new ImageIcon(piece2CentimesImage.getScaledInstance(80, 80, Image.SCALE_FAST)));
+
+		JLabel label_2Centimes = new JLabel(
+				new ImageIcon(piece2CentimesImage.getScaledInstance(80, 80, Image.SCALE_FAST)));
 		label_2Centimes.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -250,8 +279,9 @@ public class EncaissementPanierFrame implements Runnable {
 		label_2Centimes.setBorder(new LineBorder(new Color(0, 0, 0)));
 		label_2Centimes.setBounds(90, 0, 80, 80);
 		panel_2.add(label_2Centimes);
-		
-		JLabel label_5Centimes = new JLabel(new ImageIcon(piece5CentimesImage.getScaledInstance(80, 80, Image.SCALE_FAST)));
+
+		JLabel label_5Centimes = new JLabel(
+				new ImageIcon(piece5CentimesImage.getScaledInstance(80, 80, Image.SCALE_FAST)));
 		label_5Centimes.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -261,8 +291,9 @@ public class EncaissementPanierFrame implements Runnable {
 		label_5Centimes.setBorder(new LineBorder(new Color(0, 0, 0)));
 		label_5Centimes.setBounds(180, 0, 80, 80);
 		panel_2.add(label_5Centimes);
-		
-		JLabel label_10Centimes = new JLabel(new ImageIcon(piece10CentimesImage.getScaledInstance(80, 80, Image.SCALE_FAST)));
+
+		JLabel label_10Centimes = new JLabel(
+				new ImageIcon(piece10CentimesImage.getScaledInstance(80, 80, Image.SCALE_FAST)));
 		label_10Centimes.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -272,8 +303,9 @@ public class EncaissementPanierFrame implements Runnable {
 		label_10Centimes.setBorder(new LineBorder(new Color(0, 0, 0)));
 		label_10Centimes.setBounds(270, 0, 80, 80);
 		panel_2.add(label_10Centimes);
-		
-		JLabel label_20Centimes = new JLabel(new ImageIcon(piece20CentimesImage.getScaledInstance(80, 80, Image.SCALE_FAST)));
+
+		JLabel label_20Centimes = new JLabel(
+				new ImageIcon(piece20CentimesImage.getScaledInstance(80, 80, Image.SCALE_FAST)));
 		label_20Centimes.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -283,8 +315,9 @@ public class EncaissementPanierFrame implements Runnable {
 		label_20Centimes.setBorder(new LineBorder(new Color(0, 0, 0)));
 		label_20Centimes.setBounds(358, 0, 80, 80);
 		panel_2.add(label_20Centimes);
-		
-		JLabel label_50Centimes = new JLabel(new ImageIcon(piece50CentimesImage.getScaledInstance(80, 80, Image.SCALE_FAST)));
+
+		JLabel label_50Centimes = new JLabel(
+				new ImageIcon(piece50CentimesImage.getScaledInstance(80, 80, Image.SCALE_FAST)));
 		label_50Centimes.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -294,37 +327,37 @@ public class EncaissementPanierFrame implements Runnable {
 		label_50Centimes.setBorder(new LineBorder(new Color(0, 0, 0)));
 		label_50Centimes.setBounds(448, 0, 80, 80);
 		panel_2.add(label_50Centimes);
-		
+
 		JLabel lblNewLabel_2 = new JLabel("1 centime");
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_2.setBounds(0, 86, 80, 14);
 		panel_2.add(lblNewLabel_2);
-		
+
 		JLabel lblCentimes = new JLabel("2 centimes");
 		lblCentimes.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCentimes.setBounds(90, 86, 80, 14);
 		panel_2.add(lblCentimes);
-		
+
 		JLabel lblCentimes_1 = new JLabel("5 centimes");
 		lblCentimes_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCentimes_1.setBounds(180, 86, 80, 14);
 		panel_2.add(lblCentimes_1);
-		
+
 		JLabel lblCentimes_2 = new JLabel("10 centimes");
 		lblCentimes_2.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCentimes_2.setBounds(270, 86, 80, 14);
 		panel_2.add(lblCentimes_2);
-		
+
 		JLabel lblCentimes_3 = new JLabel("20 centimes");
 		lblCentimes_3.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCentimes_3.setBounds(358, 86, 80, 14);
 		panel_2.add(lblCentimes_3);
-		
+
 		JLabel lblCentimes_4 = new JLabel("50 centimes");
 		lblCentimes_4.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCentimes_4.setBounds(448, 86, 80, 14);
 		panel_2.add(lblCentimes_4);
-		
+
 		JLabel label_1Euro = new JLabel(new ImageIcon(piece1EuroImage.getScaledInstance(80, 80, Image.SCALE_FAST)));
 		label_1Euro.addMouseListener(new MouseAdapter() {
 			@Override
@@ -335,7 +368,7 @@ public class EncaissementPanierFrame implements Runnable {
 		label_1Euro.setBorder(new LineBorder(new Color(0, 0, 0)));
 		label_1Euro.setBounds(0, 111, 80, 80);
 		panel_2.add(label_1Euro);
-		
+
 		JLabel label_2Euros = new JLabel(new ImageIcon(piece2EuroImage.getScaledInstance(80, 80, Image.SCALE_FAST)));
 		label_2Euros.addMouseListener(new MouseAdapter() {
 			@Override
@@ -346,23 +379,24 @@ public class EncaissementPanierFrame implements Runnable {
 		label_2Euros.setBorder(new LineBorder(new Color(0, 0, 0)));
 		label_2Euros.setBounds(90, 111, 80, 80);
 		panel_2.add(label_2Euros);
-		
+
 		JLabel lblEuros = new JLabel("2 Euros");
 		lblEuros.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEuros.setBounds(90, 197, 80, 14);
 		panel_2.add(lblEuros);
-		
+
 		JLabel lblEuro = new JLabel("1 Euro");
 		lblEuro.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEuro.setBounds(0, 197, 80, 14);
 		panel_2.add(lblEuro);
-		
+
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(0, 23, 649, 68);
 		panel_PaiementEnEspeces.add(panel_1);
 		panel_1.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel_1.setLayout(null);
-		JLabel billet5EurosImageHolder = new JLabel(new ImageIcon(billet5EurosImage.getScaledInstance(121, 68, Image.SCALE_FAST)));
+		JLabel billet5EurosImageHolder = new JLabel(
+				new ImageIcon(billet5EurosImage.getScaledInstance(121, 68, Image.SCALE_FAST)));
 		billet5EurosImageHolder.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -372,8 +406,9 @@ public class EncaissementPanierFrame implements Runnable {
 		billet5EurosImageHolder.setBounds(0, 0, 121, 68);
 		panel_1.add(billet5EurosImageHolder);
 		billet5EurosImageHolder.setBorder(new LineBorder(new Color(0, 0, 0)));
-		
-		JLabel billet10EurosImageHolder = new JLabel(new ImageIcon(billet10EurosImage.getScaledInstance(121, 68, Image.SCALE_FAST)));
+
+		JLabel billet10EurosImageHolder = new JLabel(
+				new ImageIcon(billet10EurosImage.getScaledInstance(121, 68, Image.SCALE_FAST)));
 		billet10EurosImageHolder.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -383,8 +418,9 @@ public class EncaissementPanierFrame implements Runnable {
 		billet10EurosImageHolder.setBounds(131, 0, 121, 68);
 		panel_1.add(billet10EurosImageHolder);
 		billet10EurosImageHolder.setBorder(new LineBorder(new Color(0, 0, 0)));
-		
-		JLabel billet20EurosImageHolder = new JLabel(new ImageIcon(billet20EurosImage.getScaledInstance(121, 68, Image.SCALE_FAST)));
+
+		JLabel billet20EurosImageHolder = new JLabel(
+				new ImageIcon(billet20EurosImage.getScaledInstance(121, 68, Image.SCALE_FAST)));
 		billet20EurosImageHolder.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -394,8 +430,9 @@ public class EncaissementPanierFrame implements Runnable {
 		billet20EurosImageHolder.setBounds(262, 0, 121, 68);
 		panel_1.add(billet20EurosImageHolder);
 		billet20EurosImageHolder.setBorder(new LineBorder(new Color(0, 0, 0)));
-		
-		JLabel billet50EurosImageHolder = new JLabel(new ImageIcon(billet50EurosImage.getScaledInstance(121, 68, Image.SCALE_FAST)));
+
+		JLabel billet50EurosImageHolder = new JLabel(
+				new ImageIcon(billet50EurosImage.getScaledInstance(121, 68, Image.SCALE_FAST)));
 		billet50EurosImageHolder.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -405,8 +442,9 @@ public class EncaissementPanierFrame implements Runnable {
 		billet50EurosImageHolder.setBounds(393, 0, 121, 68);
 		panel_1.add(billet50EurosImageHolder);
 		billet50EurosImageHolder.setBorder(new LineBorder(new Color(0, 0, 0)));
-		
-		JLabel billet100EurosImageHolder = new JLabel(new ImageIcon(billet100EurosImage.getScaledInstance(121, 68, Image.SCALE_FAST)));
+
+		JLabel billet100EurosImageHolder = new JLabel(
+				new ImageIcon(billet100EurosImage.getScaledInstance(121, 68, Image.SCALE_FAST)));
 		billet100EurosImageHolder.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -416,72 +454,82 @@ public class EncaissementPanierFrame implements Runnable {
 		billet100EurosImageHolder.setBounds(524, 0, 121, 68);
 		panel_1.add(billet100EurosImageHolder);
 		billet100EurosImageHolder.setBorder(new LineBorder(new Color(0, 0, 0)));
-		
-		JLabel lblPices = new JLabel("Pi\u00E8ces");
+
+		JLabel lblPices = new JLabel(" Pi\u00E8ces");
 		lblPices.setBounds(0, 102, 528, 14);
 		panel_PaiementEnEspeces.add(lblPices);
 		lblPices.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		
-		JLabel lblNewLabel_1 = new JLabel("Billets");
-		lblNewLabel_1.setBounds(0, 0, 528, 14);
+
+		JLabel lblNewLabel_1 = new JLabel(" Billets");
+		lblNewLabel_1.setBounds(0, 2, 528, 14);
 		panel_PaiementEnEspeces.add(lblNewLabel_1);
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		
+
 		panel_PaiementParCarte = new JPanel();
 		panel_PaiementParCarte.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
 		layeredPane.add(panel_PaiementParCarte, "name_134359256879800");
 		panel_PaiementParCarte.setLayout(null);
-		
+
 		codePin = new JPasswordField();
+		codePin.setHorizontalAlignment(SwingConstants.CENTER);
 		codePin.setBounds(210, 96, 86, 20);
 		panel_PaiementParCarte.add(codePin);
 		codePin.setColumns(10);
-		
+
 		JLabel lblNewLabel_3 = new JLabel("Veuillez saisir votre code pin");
 		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_3.setBounds(150, 71, 202, 14);
 		panel_PaiementParCarte.add(lblNewLabel_3);
-		
+
 		JButton btnNewButton_1 = new JButton("Valider");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String codePinString = codePin.getText();
-				
-				if(codePinString.length() != 4) {
-					JOptionPane.showMessageDialog(panel, "Un problème survenu. Le code pin doit avoir 4 chiffres", "Attention", JOptionPane.ERROR_MESSAGE);
+
+				if (codePinString.length() != 4) {
+					JOptionPane.showMessageDialog(panel, "Un problème survenu. Le code pin doit avoir 4 chiffres",
+							"Attention", JOptionPane.ERROR_MESSAGE);
 					return;
 				} else {
 					try {
 						int codePinInt = Integer.parseInt(codePinString);
 					} catch (NumberFormatException ex) {
-						JOptionPane.showMessageDialog(panel, "Un problème survenu. Le code pin doit êttre en format numérique", "Attention", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(panel,
+								"Un problème survenu. Le code pin doit êttre en format numérique", "Attention",
+								JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 				}
-				
+
+				JOptionPane.showMessageDialog(panel, "Code bon. Vous pouvez procéder l'encaissement.", "Succès",
+						JOptionPane.PLAIN_MESSAGE);
+				codePin.setText("");
 				btnEncaisser.setEnabled(true);
 			}
 		});
 		btnNewButton_1.setBounds(210, 127, 89, 23);
 		panel_PaiementParCarte.add(btnNewButton_1);
-		
+
 		btnEncaisser = new JButton("Encaisser");
 		btnEncaisser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TicketsActions.insererNouveauTicket();
-				TicketsActions.insererTicketsProduits();
+				int resultat = creerEtAjouterTicket("fermé");
+				if(resultat == INSERT_OK) {
+					InterfaceUtilisateur.setVisible(true);
+					encaissementPanierFrame.dispose();
+				}
 			}
 		});
 		btnEncaisser.setEnabled(false);
 		btnEncaisser.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnEncaisser.setBounds(742, 442, 270, 34);
 		panel.add(btnEncaisser);
-		
+
 		JLabel lblAPayer = new JLabel("\u00C0 payer");
 		lblAPayer.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblAPayer.setBounds(534, 0, 121, 34);
 		panel.add(lblAPayer);
-		
+
 		label_MontantAPayer = new JLabel(this.montantAPayer + " EUR    ");
 		label_MontantAPayer.setOpaque(true);
 		label_MontantAPayer.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -489,12 +537,12 @@ public class EncaissementPanierFrame implements Runnable {
 		label_MontantAPayer.setBackground(SystemColor.info);
 		label_MontantAPayer.setBounds(534, 30, 161, 25);
 		panel.add(label_MontantAPayer);
-		
+
 		JLabel lblARendre = new JLabel("\u00C0 rendre");
 		lblARendre.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblARendre.setBounds(705, 0, 121, 34);
 		panel.add(lblARendre);
-		
+
 		label_MontantARendre = new JLabel(this.montantARendre + " EUR    ");
 		label_MontantARendre.setOpaque(true);
 		label_MontantARendre.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -502,37 +550,47 @@ public class EncaissementPanierFrame implements Runnable {
 		label_MontantARendre.setBackground(SystemColor.info);
 		label_MontantARendre.setBounds(705, 30, 161, 25);
 		panel.add(label_MontantARendre);
-		
+
 		comboBox = new JComboBox();
 		comboBox.addItemListener(new ItemListener() {
-		    public void itemStateChanged(ItemEvent e) {
-		    	if (e.getStateChange() == ItemEvent.SELECTED) {
-		            if(String.valueOf(comboBox.getSelectedItem()).equals("Paiement en especes")) {
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					if (String.valueOf(comboBox.getSelectedItem()).equals("Paiement en especes")) {
 						switchPanels(panel_PaiementEnEspeces);
 					} else if (String.valueOf(comboBox.getSelectedItem()).equals("Paiement par Carte Bancaire")) {
 						switchPanels(panel_PaiementParCarte);
 					}
-		    }
-		}});
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Paiement en especes", "Paiement par Carte Bancaire"}));
+				}
+			}
+		});
+		comboBox.setModel(
+				new DefaultComboBoxModel(new String[] { "Paiement en especes", "Paiement par Carte Bancaire" }));
 		comboBox.setBounds(363, 66, 184, 22);
 		panel.add(comboBox);
+
+		JLabel label = new JLabel("Num\u00E9ro de ticket");
+		label.setFont(new Font("Tahoma", Font.BOLD, 11));
+		label.setBounds(10, 38, 107, 24);
+		encaissementPanierFrame.getContentPane().add(label);
+
+		JLabel label_1 = new JLabel("N° " + TicketsActions.getNextInsertIdTicket());
+		label_1.setOpaque(true);
+		label_1.setHorizontalAlignment(SwingConstants.CENTER);
+		label_1.setFont(new Font("Tahoma", Font.BOLD, 13));
+		label_1.setBackground(SystemColor.info);
+		label_1.setBounds(127, 40, 150, 19);
+		encaissementPanierFrame.getContentPane().add(label_1);
 	}
-	
-	public Utilisateurs getUser()
-	{
-		return user;
-	}
-	
+
 	public void switchPanels(JPanel panel) {
 		layeredPane.removeAll();
 		layeredPane.add(panel);
 		layeredPane.repaint();
 		layeredPane.revalidate();
 	}
-	
-	public void deduireMontantAPayer (float montantADeduire) {
-		if(montantAPayer > 0) {
+
+	public void deduireMontantAPayer(float montantADeduire) {
+		if (montantAPayer > 0) {
 			if (montantADeduire <= montantAPayer) {
 				montantAPayer -= montantADeduire;
 				label_MontantAPayer.setText(String.format("%.2f", montantAPayer));
@@ -543,9 +601,45 @@ public class EncaissementPanierFrame implements Runnable {
 				label_MontantAPayer.setText(Float.toString(montantAPayer));
 			}
 		}
-		
+
 		if (montantAPayer == 0) {
+			if (montantARendre > 0) {
+				JOptionPane.showMessageDialog(this.layeredPane, String.format("%.2f", montantARendre)
+						+ " EUR à rendre au client. Veuillez cliquer sur OK ou fermer cette fenêtre une fois ce montant est rendu.",
+						"Attention", JOptionPane.OK_OPTION);
+				JOptionPane.showMessageDialog(this.layeredPane,
+						"Paiement terminé avec succès. Vous pouvez procéder l'encaissement.", "Succès",
+						JOptionPane.PLAIN_MESSAGE);
+			}
 			btnEncaisser.setEnabled(true);
+		}
+	}
+
+	public int creerEtAjouterTicket(String statut) {
+		String commentInput = JOptionPane.showInputDialog("Commentaire sur ce ticket (optionnel) : ");
+		if(commentInput != null) {
+			boolean resultatInsert = false;
+			resultatInsert = TicketsActions.ajouterTicket(statut, commentInput, montantPanier,
+					InterfaceUtilisateur.getUser().getId());
+			if (resultatInsert) {
+				resultatInsert = TicketsProduitsActions.ajouterTicketProduits(TicketsActions.getLastInsertIdTicket(),
+						indexProduitsDansPanierAvecQuantite);
+				if (resultatInsert) {
+					JOptionPane.showMessageDialog(encaissementPanierFrame,
+							"Le ticket a été enregistré avec succès. Vous pouvez le retrouver dans le menu 'Afficher historique de transaction'",
+							"Succès", JOptionPane.PLAIN_MESSAGE);
+				}
+			}
+			
+			if (!resultatInsert) {
+				JOptionPane.showMessageDialog(encaissementPanierFrame, "Un problème survenu. Veuillez réessayer", "Attention",
+						JOptionPane.ERROR_MESSAGE);
+			}
+			
+			return INSERT_OK;
+		} else {
+			// Utilisateur clique sur annuler
+			return INSERT_CANCELLED;
 		}
 	}
 }

@@ -104,7 +104,7 @@ public class ModificationQuantiteStockPanel {
 						{
 							valeurSelected = listeProduitRecherche.getSelectedValue().toString();
 							
-							jTableQuantitePrix.setModel(DbUtils.resultSetToTableModel(ProduitsActions.getProduitSingle(valeurSelected)));
+							jTableQuantitePrix.setModel(DbUtils.resultSetToTableModel(ProduitsActions.getProduitSingleByName(valeurSelected)));
 						}
 						else
 						{
@@ -138,11 +138,11 @@ public class ModificationQuantiteStockPanel {
 						}
 					}
 					
-					ProduitsActions.modifierStockProduit(Float.valueOf(ModifQuantiteProduit_Quantite.getText().toString()), Float.valueOf(ModifierQuantiteProduitPrix.getText().toString()), p);
+					ProduitsActions.modifierStockEtPrixProduit(Float.valueOf(ModifQuantiteProduit_Quantite.getText().toString()), Float.valueOf(ModifierQuantiteProduitPrix.getText().toString()), p);
 					
 					valeurSelected = listeProduitRecherche.getSelectedValue().toString();
 					
-					jTableQuantitePrix.setModel(DbUtils.resultSetToTableModel(ProduitsActions.getProduitSingle(valeurSelected)));
+					jTableQuantitePrix.setModel(DbUtils.resultSetToTableModel(ProduitsActions.getProduitSingleByName(valeurSelected)));
 					
 					JOptionPane.showMessageDialog(null, "Les modifications ont bien été prises en compte !", "Modification Stock !", JOptionPane.INFORMATION_MESSAGE);
 				}
@@ -198,7 +198,7 @@ public class ModificationQuantiteStockPanel {
 				valeurSelected = "";
 				ModifQuantiteProduit_NomID.setText(null);
 				listRecherche.clear();
-				jTableQuantitePrix.setModel(DbUtils.resultSetToTableModel(ProduitsActions.getProduitSingle("")));
+				jTableQuantitePrix.setModel(DbUtils.resultSetToTableModel(ProduitsActions.getProduitSingleByName("")));
 				listeProduitRecherche.updateUI();
 			}
 		});
@@ -210,7 +210,7 @@ public class ModificationQuantiteStockPanel {
 		jTableQuantitePrix.setBounds(350, 220, 477, 121);
 		jTableQuantitePrix.setFillsViewportHeight(true);
 		
-		jTableQuantitePrix.setModel(DbUtils.resultSetToTableModel(ProduitsActions.getProduitSingle("")));
+		jTableQuantitePrix.setModel(DbUtils.resultSetToTableModel(ProduitsActions.getProduitSingleByName("")));
 
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(333, 220, 508, 121);

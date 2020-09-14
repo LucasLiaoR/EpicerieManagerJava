@@ -12,6 +12,7 @@ public class Tickets implements Serializable {
 	private Timestamp date;
 	private String statut;
 	private String commentaire;
+	private float montant;
 	private int idUtilisateur;
 	
 	/**
@@ -20,10 +21,18 @@ public class Tickets implements Serializable {
 	 * @param commentaire
 	 * @param id_utilisateur
 	 */
-	public Tickets(Timestamp date, String statut, String commentaire, int idUtilisateur) {
+	public Tickets(Timestamp date, String statut, String commentaire, float montant,int idUtilisateur) {
 		this.date = date;
 		this.statut = statut;
 		this.commentaire = commentaire;
+		this.setMontant(montant);
+		this.idUtilisateur = idUtilisateur;
+	}
+	
+	public Tickets(String statut, String commentaire, float montant,int idUtilisateur) {
+		this.statut = statut;
+		this.commentaire = commentaire;
+		this.setMontant(montant);
 		this.idUtilisateur = idUtilisateur;
 	}
 
@@ -42,16 +51,21 @@ public class Tickets implements Serializable {
 	public String getCommentaire() { return commentaire; }
 
 	public void setCommentaire(String commentaire) { this.commentaire = commentaire; }
+	
+	public float getMontant() { return montant; }
+
+	public void setMontant(float montant) { this.montant = montant; }
 
 	public int getIdUtilisateur() { return idUtilisateur; }
 
 	public void setId_utilisateur(int idUtilisateur) { this.idUtilisateur = idUtilisateur; }
 	
 	public String createInsertStatement() {
-		return "INSERT INTO TICKETS (tckt_date, tck_statut, tckt_commentaire, utls_id) VALUES("
+		return "INSERT INTO TICKETS (tckt_date, tckt_statut, tckt_commentaire, tckt_montant_ttc, utls_id) VALUES("
 				+ "NOW(),"
 				+ "'" + this.getStatut() + "',"
 				+ "'" + this.getCommentaire() + "',"
+				+ "'" + this.getMontant() + "',"
 				+ "'" + this.getIdUtilisateur() + "'"
 				+ ");";
 	}
