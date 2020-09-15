@@ -18,6 +18,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
@@ -147,7 +148,7 @@ public class InterfaceUtilisateur implements Runnable {
 		panelModifierQuantiteStock = new ModificationQuantiteStockPanel().getPanel();
 		PanelsStack.add(panelModifierQuantiteStock, "name_6306670600200");
 		
-		panelParcourirFichierClient = new AffichageFichierUtilisateurPanel().getPanel();
+		panelParcourirFichierClient = new ChangerUtilisateurPanel().getPanel();
 		PanelsStack.add(panelParcourirFichierClient, "name_6306694792400");
 		
 		panelAjouterNouveauClient = new AjoutUtilisateurPanel().getPanel();

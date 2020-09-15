@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ProduitsActions {
 	
-	public static boolean ajouterProduit(int id, String nom, String desc, float prixVente, int qteMin, int qteStock, String unite, String statut, int cateID)
+	public static boolean ajouterProduit(int id, String nom, String desc, float prixVente, int qteMin, float qteStock, String unite, String statut, int cateID)
 	{
 		try {
 			Connection cnx = DBConnection.ConnectToDatabase();
@@ -47,7 +47,7 @@ public class ProduitsActions {
 				String prod_description = resProduits.getString("prod_description");
 				int prod_prix_vente_ttc = resProduits.getInt("prod_prix_vente_ttc");
 				int prod_quantite_min = resProduits.getInt("prod_quantite_min");
-				int prod_quantite_stock = resProduits.getInt("prod_quantite_stock");
+				float prod_quantite_stock = resProduits.getFloat("prod_quantite_stock");
 				String prod_unite = resProduits.getString("prod_unite");
 				String prod_statut = resProduits.getString("prod_statut");
 				int prod_cate_id = resProduits.getInt("cate_id");
@@ -106,7 +106,7 @@ public class ProduitsActions {
 				String prod_description = getProduitSingle.getString("prod_description");
 				float prod_prix_vente_ttc = getProduitSingle.getFloat("prod_prix_vente_ttc");
 				int prod_quantite_min = getProduitSingle.getInt("prod_quantite_min");
-				int prod_quantite_stock = getProduitSingle.getInt("prod_quantite_stock");
+				float prod_quantite_stock = getProduitSingle.getFloat("prod_quantite_stock");
 				String prod_unite = getProduitSingle.getString("prod_unite");
 				String prod_statut = getProduitSingle.getString("prod_statut");
 				int prod_cate_id = getProduitSingle.getInt("cate_id");
