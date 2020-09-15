@@ -45,6 +45,7 @@ public class InterfaceUtilisateur implements Runnable {
 	private JPanel panelAjouterNouveauClient;
 	private JPanel panelAffichageTickets;
 	private JPanel panelDashboardInventaire;
+	private JPanel panelModifierInfosUtilisateur;
 	public static JLabel labelUtilisateurCo;
 	private static Utilisateurs user;
 	
@@ -287,6 +288,17 @@ public class InterfaceUtilisateur implements Runnable {
 		btnAjouterUnNouveau.setMargin(new Insets(2, 2, 2, 2));
 		btnAjouterUnNouveau.setBounds(10, 77, 142, 30);
 		panelGestionClientele.add(btnAjouterUnNouveau);
+		
+		JButton btnModifierInfoUtilisateur = new JButton("Modifier infos utilisateur");
+		btnModifierInfoUtilisateur.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				panelModifierInfosUtilisateur = new ModifierInfosUtilisateurPanel().getPanel();
+				switchPanels(panelModifierInfosUtilisateur);
+			}
+		});
+		btnModifierInfoUtilisateur.setMargin(new Insets(2, 2, 2, 2));
+		btnModifierInfoUtilisateur.setBounds(10, 113, 142, 30);
+		panelGestionClientele.add(btnModifierInfoUtilisateur);
 		
 
 	}

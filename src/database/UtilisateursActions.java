@@ -132,6 +132,27 @@ public class UtilisateursActions {
 		return id;
 	}
 	
+	public static void modifierInfosUtilisateur(Utilisateurs user)
+	{
+		try {
+			Connection cnx = DBConnection.ConnectToDatabase();
+
+			Statement st = cnx.createStatement();
+			
+			st.executeUpdate("UPDATE utilisateurs SET utls_nom = '" + user.getNom() + "' WHERE utls_id = " + user.getId() + ";");
+			st.executeUpdate("UPDATE utilisateurs SET utls_prenom = '" + user.getPrenom() + "' WHERE utls_id = " + user.getId() + ";");
+			st.executeUpdate("UPDATE utilisateurs SET utls_telephone = '" + user.getTelephone() + "' WHERE utls_id = " + user.getId() + ";");
+			st.executeUpdate("UPDATE utilisateurs SET utls_mail = '" + user.getMail() + "' WHERE utls_id = " + user.getId() + ";");
+			st.executeUpdate("UPDATE utilisateurs SET utls_adresse = '" + user.getAdresse() + "' WHERE utls_id = " + user.getId() + ";");
+			st.executeUpdate("UPDATE utilisateurs SET utls_mdp = '" + user.getMdp() + "' WHERE utls_id = " + user.getId() + ";");
+			
+			cnx.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 	
 	
 }
