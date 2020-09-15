@@ -6,6 +6,7 @@ import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -112,23 +113,37 @@ public class AjoutProduitPanel {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				int idCate = 1;
-				
-				List<Categories> listeCategories = new ArrayList<Categories>();
-				
-				listeCategories = CategoriesActions.getCategoriesDB();
-				
-				for (int i = 1; i<listeCategories.size(); i++)
+				if (!testIsNumeric(AjoutProduit_PrixVente.getText().toString()) || !testIsNumeric(AjoutProduitQuantiteMinimum.getText().toString()) || AjoutProduitQuantiteMinimum.getText().contains(" ") || AjoutProduitQuantiteMinimum.getText().isEmpty() || AjoutProduit_PrixVente.getText().contains(" ") || AjoutProduit_PrixVente.getText().isEmpty())
 				{
-					if (listeCategories.get(i).getLibelle().equals(AjoutProduitCate.getSelectedItem()))
+					JOptionPane.showMessageDialog(null, "Le prix et la quantité minimum doivent être une valeur numérique (sans espace) et positive. Veuillez réessayer !", "Attention", JOptionPane.ERROR_MESSAGE);
+				}
+				else if (AjoutProduit_NomProduit.getText().isEmpty() || AjoutProduitUniteProd.getText().isEmpty() || AjoutProduit_Statut.getText().isEmpty())
+				{
+					JOptionPane.showMessageDialog(null, "Le nom du produit, l'unité de mesure et le statut doivent impérativement être renseignés. Veuillez réessayer !", "Attention", JOptionPane.ERROR_MESSAGE);
+				}
+				else
+				{
+					int idCate = 1;
+						
+					List<Categories> listeCategories = new ArrayList<Categories>();
+						
+					listeCategories = CategoriesActions.getCategoriesDB();
+						
+					for (int i = 1; i<listeCategories.size(); i++)
 					{
-						idCate = i+1;
+						if (listeCategories.get(i).getLibelle().equals(AjoutProduitCate.getSelectedItem()))
+						{
+							idCate = i+1;
+						}
 					}
+						
+					ProduitsActions.ajouterProduit(0, AjoutProduit_NomProduit.getText(), AjoutProduit_Desc.getText(), Float.parseFloat(AjoutProduit_PrixVente.getText()), Integer.parseInt(AjoutProduitQuantiteMinimum.getText()), 0, AjoutProduitUniteProd.getText(), AjoutProduit_Statut
+		.getText(), idCate);
+					}
+	
+					
 				}
 				
-				ProduitsActions.ajouterProduit(0, AjoutProduit_NomProduit.getText(), AjoutProduit_Desc.getText(), Integer.parseInt(AjoutProduit_PrixVente.getText()), Integer.parseInt(AjoutProduitQuantiteMinimum.getText()), 0, AjoutProduitUniteProd.getText(), AjoutProduit_Statut
-.getText(), idCate);
-			}
 		});
 		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnNewButton.setBounds(553, 449, 271, 52);
@@ -161,5 +176,14 @@ public class AjoutProduitPanel {
 	
 	public JPanel getPanel() {
 		return panelAjouterProduit;
+	}
+	
+	public boolean testIsNumeric(String text)
+	{
+		boolean numeric;
+		
+		numeric = text.matches("-?\\d+(\\.\\d+)?");
+		
+        return numeric;
 	}
 }

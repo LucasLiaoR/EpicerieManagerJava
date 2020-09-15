@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ProduitsActions {
 	
-	public static boolean ajouterProduit(int id, String nom, String desc, int prixVente, int qteMin, int qteStock, String unite, String statut, int cateID)
+	public static boolean ajouterProduit(int id, String nom, String desc, float prixVente, int qteMin, int qteStock, String unite, String statut, int cateID)
 	{
 		try {
 			Connection cnx = DBConnection.ConnectToDatabase();
@@ -71,7 +71,7 @@ public class ProduitsActions {
 
 			Statement st = cnx.createStatement();
 
-			// Recuperer et ajouter tous les tickets
+			// Recuperer et ajouter tous les produits
 			getProduitSingle = st.executeQuery("SELECT " + 
 					"    prod_nom AS Nom," + 
 					"    prod_prix_vente_ttc AS Prix," + 
@@ -98,13 +98,13 @@ public class ProduitsActions {
 
 			Statement st = cnx.createStatement();
 
-			// Recuperer et ajouter tous les tickets
+			// Recuperer et ajouter tous les produits
 			ResultSet getProduitSingle = st.executeQuery("SELECT * FROM produits WHERE prod_id = '" + Integer.toString(id) + "'");
 			if (getProduitSingle.next()) {
 				int prod_id = getProduitSingle.getInt("prod_id");
 				String prod_nom = getProduitSingle.getString("prod_nom");
 				String prod_description = getProduitSingle.getString("prod_description");
-				int prod_prix_vente_ttc = getProduitSingle.getInt("prod_prix_vente_ttc");
+				float prod_prix_vente_ttc = getProduitSingle.getFloat("prod_prix_vente_ttc");
 				int prod_quantite_min = getProduitSingle.getInt("prod_quantite_min");
 				int prod_quantite_stock = getProduitSingle.getInt("prod_quantite_stock");
 				String prod_unite = getProduitSingle.getString("prod_unite");
@@ -116,6 +116,84 @@ public class ProduitsActions {
 			e.printStackTrace();
 		}
 		return p;
+	}
+	
+	public static ResultSet getAllProduits()
+	{
+		ResultSet getAllProduits = null;
+
+		try {
+			Connection cnx = DBConnection.ConnectToDatabase();
+
+			Statement st = cnx.createStatement();
+
+			// Recuperer et ajouter tous les produits
+			getAllProduits = st.executeQuery("SELECT " + 
+					"	 prod_id AS Id," +
+					"    prod_nom AS Nom," + 
+					"    prod_prix_vente_ttc AS Prix," + 
+					"    prod_quantite_min AS Quantité_min," + 
+					"    prod_quantite_stock AS Stock," + 
+					"    prod_unite AS Unité_Mesure," +
+					"    prod_statut AS Statut " +
+					"FROM" + 
+					"    produits;");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return getAllProduits;
+	}
+	
+	public static ResultSet getProduitsRupture()
+	{
+		ResultSet getProduitsRupture = null;
+
+		try {
+			Connection cnx = DBConnection.ConnectToDatabase();
+
+			Statement st = cnx.createStatement();
+
+			// Recuperer et ajouter tous les produits
+			getProduitsRupture = st.executeQuery("SELECT " + 
+					"	 prod_id AS Id," +
+					"    prod_nom AS Nom," + 
+					"    prod_prix_vente_ttc AS Prix," + 
+					"    prod_quantite_min AS Quantité_min," + 
+					"    prod_quantite_stock AS Stock," + 
+					"    prod_unite AS Unité_Mesure," +
+					"    prod_statut AS Statut " +
+					"FROM" + 
+					"    produits WHERE prod_statut = 'Rupture'");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return getProduitsRupture;
+	}
+	
+	public static ResultSet getProduitsACommander()
+	{
+		ResultSet getProduitsACommander = null;
+
+		try {
+			Connection cnx = DBConnection.ConnectToDatabase();
+
+			Statement st = cnx.createStatement();
+
+			// Recuperer et ajouter tous les produits
+			getProduitsACommander = st.executeQuery("SELECT " + 
+					"	 prod_id AS Id," +
+					"    prod_nom AS Nom," + 
+					"    prod_prix_vente_ttc AS Prix," + 
+					"    prod_quantite_min AS Quantité_min," + 
+					"    prod_quantite_stock AS Stock," + 
+					"    prod_unite AS Unité_Mesure," +
+					"    prod_statut AS Statut " +
+					"FROM" + 
+					"    produits WHERE prod_quantite_stock < prod_quantite_min");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return getProduitsACommander;
 	}
 	
 	public static ResultSet getAllProduitByStatusResultSet(String... status) {
@@ -135,7 +213,7 @@ public class ProduitsActions {
 				}
 			}
 
-			// Recuperer et ajouter tous les tickets
+			// Recuperer et ajouter tous les produits
 			getProduitSingle = st.executeQuery("SELECT " + 
 					"	 prod_id AS Id," +
 					"    prod_nom AS Nom," + 

@@ -179,7 +179,7 @@ public class CreationNouveauTicketPanel {
 					return;
 				}
 				
-				if(textField_Quantite.getText().isBlank() || textField_Quantite.getText().isEmpty() || !isPositiveNumber(textField_Quantite.getText())) {
+				if(textField_Quantite.getText().contains(" ") || textField_Quantite.getText().isEmpty() || !isPositiveNumber(textField_Quantite.getText())) {
 					JOptionPane.showMessageDialog(panel, "La quntité doit être une valeur numérique et positive. Veuillez réessayer !", "Attention", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
@@ -297,4 +297,5 @@ public class CreationNouveauTicketPanel {
 		}
 		return isPositiveNumber;
 	}
+	
 }
