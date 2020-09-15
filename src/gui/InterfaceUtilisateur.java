@@ -18,6 +18,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
@@ -44,6 +45,7 @@ public class InterfaceUtilisateur implements Runnable {
 	private JPanel panelAjouterNouveauClient;
 	private JPanel panelAffichageTickets;
 	private JPanel panelDashboardInventaire;
+	private JPanel panelModifierInfosUtilisateur;
 	public static JLabel labelUtilisateurCo;
 	private static Utilisateurs user;
 	
@@ -147,7 +149,7 @@ public class InterfaceUtilisateur implements Runnable {
 		panelModifierQuantiteStock = new ModificationQuantiteStockPanel().getPanel();
 		PanelsStack.add(panelModifierQuantiteStock, "name_6306670600200");
 		
-		panelParcourirFichierClient = new AffichageFichierUtilisateurPanel().getPanel();
+		panelParcourirFichierClient = new ChangerUtilisateurPanel().getPanel();
 		PanelsStack.add(panelParcourirFichierClient, "name_6306694792400");
 		
 		panelAjouterNouveauClient = new AjoutUtilisateurPanel().getPanel();
@@ -286,6 +288,17 @@ public class InterfaceUtilisateur implements Runnable {
 		btnAjouterUnNouveau.setMargin(new Insets(2, 2, 2, 2));
 		btnAjouterUnNouveau.setBounds(10, 77, 142, 30);
 		panelGestionClientele.add(btnAjouterUnNouveau);
+		
+		JButton btnModifierInfoUtilisateur = new JButton("Modifier infos utilisateur");
+		btnModifierInfoUtilisateur.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				panelModifierInfosUtilisateur = new ModifierInfosUtilisateurPanel().getPanel();
+				switchPanels(panelModifierInfosUtilisateur);
+			}
+		});
+		btnModifierInfoUtilisateur.setMargin(new Insets(2, 2, 2, 2));
+		btnModifierInfoUtilisateur.setBounds(10, 113, 142, 30);
+		panelGestionClientele.add(btnModifierInfoUtilisateur);
 		
 
 	}

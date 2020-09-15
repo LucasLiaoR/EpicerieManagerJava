@@ -27,7 +27,7 @@ import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 
-public class AffichageFichierUtilisateurPanel {
+public class ChangerUtilisateurPanel {
 	private JPanel panel;
 	private JTextField textFieldNom;
 	private JTextField textFieldPrenom;
@@ -44,7 +44,7 @@ public class AffichageFichierUtilisateurPanel {
 	 */
 	private final JScrollPane scrollPane_2 = new JScrollPane();
 	
-	public AffichageFichierUtilisateurPanel ()
+	public ChangerUtilisateurPanel ()
 	{
 		panel = new JPanel();
 		panel.setBounds(181, 38, 851, 512);
@@ -88,7 +88,7 @@ public class AffichageFichierUtilisateurPanel {
 				
 				listRecherche.clear();
 				
-				if (!textFieldNom.getText().toString().equals("") && !textFieldPrenom.getText().toString().equals(""))
+				if (!textFieldNom.getText().toString().equals("") || !textFieldPrenom.getText().toString().equals(""))
 				{
 					listeUtilisateursDB = UtilisateursActions.getUtilisateurs();
 					
