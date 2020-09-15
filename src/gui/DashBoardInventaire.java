@@ -35,7 +35,7 @@ public class DashBoardInventaire {
 		panelDashboardInventaire.setBounds(181, 38, 851, 512);
 		panelDashboardInventaire.setLayout(null);
 		
-		JLabel label = new JLabel("Modification de la quantit\u00E9 d'un produit");
+		JLabel label = new JLabel("Vue d'ensemble de l'inventaire");
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setFont(new Font("Tahoma", Font.ITALIC, 16));
 		label.setBorder(new LineBorder(new Color(0, 0, 0)));
