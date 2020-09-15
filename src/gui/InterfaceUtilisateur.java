@@ -289,7 +289,7 @@ public class InterfaceUtilisateur implements Runnable {
 		btnAjouterUnNouveau.setBounds(10, 77, 142, 30);
 		panelGestionClientele.add(btnAjouterUnNouveau);
 		
-		JButton btnModifierInfoUtilisateur = new JButton("Modifier infos utilisateur");
+		JButton btnModifierInfoUtilisateur = new JButton("Modifier infos user");
 		btnModifierInfoUtilisateur.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				panelModifierInfosUtilisateur = new ModifierInfosUtilisateurPanel().getPanel();

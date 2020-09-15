@@ -106,7 +106,7 @@ public class ModifierInfosUtilisateurPanel {
 		JButton btnNewButton = new JButton("Confirmer les modifications");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (!txtNom.getText().toString().isEmpty() || !txtPrenom.getText().toString().isEmpty() || !txtTelephone.getText().toString().isEmpty() || !txtEmail.getText().toString().isEmpty() || !txtAdresse.getText().toString().isEmpty() || !passwordField.getPassword().toString().isEmpty())
+				if (!txtNom.getText().toString().isEmpty() && !txtPrenom.getText().toString().isEmpty() && !txtTelephone.getText().toString().isEmpty() && !txtEmail.getText().toString().isEmpty() && !txtAdresse.getText().toString().isEmpty() && !passwordField.getPassword().toString().isEmpty())
 				{
 					// update des données dans l'attribut user de la classe InterfaceUtilisateur
 					InterfaceUtilisateur.getUser().setNom(txtNom.getText().toString());
