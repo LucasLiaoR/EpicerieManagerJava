@@ -168,5 +168,21 @@ INSERT IGNORE INTO Produits VALUES(50, 'Jus mix fruits', 'Pour couper la vodka',
 #------------------------------------------------------------
 # Insertion des premiers tickets
 #------------------------------------------------------------
+INSERT IGNORE INTO `tickets` (`tckt_id`, `tckt_date`, `tckt_statut`, `tckt_commentaire`, `tckt_montant_ttc`, `utls_id`) VALUES(1, '2020-09-15', 'fermé', 'note', 267, 1);
+INSERT IGNORE INTO `tickets` (`tckt_id`, `tckt_date`, `tckt_statut`, `tckt_commentaire`, `tckt_montant_ttc`, `utls_id`) VALUES(2, '2020-09-15', 'fermé', '', 120, 1);
+INSERT IGNORE INTO `tickets` (`tckt_id`, `tckt_date`, `tckt_statut`, `tckt_commentaire`, `tckt_montant_ttc`, `utls_id`) VALUES(3, '2020-09-15', 'fermé', '', 40, 1);
+INSERT IGNORE INTO `tickets` (`tckt_id`, `tckt_date`, `tckt_statut`, `tckt_commentaire`, `tckt_montant_ttc`, `utls_id`) VALUES(4, '2020-09-15', 'fermé', 'commentaire', 80, 1);
+INSERT IGNORE INTO `tickets` (`tckt_id`, `tckt_date`, `tckt_statut`, `tckt_commentaire`, `tckt_montant_ttc`, `utls_id`) VALUES(5, '2020-09-15', 'fermé', '', 750, 1);
+INSERT IGNORE INTO `tickets` (`tckt_id`, `tckt_date`, `tckt_statut`, `tckt_commentaire`, `tckt_montant_ttc`, `utls_id`) VALUES(6, '2020-09-15', 'fermé', '', 375, 1);
 
-INSERT IGNORE INTO Tickets VALUES (1, '2020-09-01', 'fermé', NULL, '20', '1');
+#------------------------------------------------------------
+# Insertion des produits dans les tickets
+#------------------------------------------------------------
+INSERT IGNORE INTO `tickets_produits` (`tckt_id`, `prod_id`, `tckt_prod_id`, `tckt_prod_quantite`) VALUES(1, 6, 1, 3);
+INSERT IGNORE INTO `tickets_produits` (`tckt_id`, `prod_id`, `tckt_prod_id`, `tckt_prod_quantite`) VALUES(1, 10, 3, 7);
+INSERT IGNORE INTO `tickets_produits` (`tckt_id`, `prod_id`, `tckt_prod_id`, `tckt_prod_quantite`) VALUES(1, 13, 2, 6);
+INSERT IGNORE INTO `tickets_produits` (`tckt_id`, `prod_id`, `tckt_prod_id`, `tckt_prod_quantite`) VALUES(2, 10, 4, 8);
+INSERT IGNORE INTO `tickets_produits` (`tckt_id`, `prod_id`, `tckt_prod_id`, `tckt_prod_quantite`) VALUES(3, 12, 5, 10);
+INSERT IGNORE INTO `tickets_produits` (`tckt_id`, `prod_id`, `tckt_prod_id`, `tckt_prod_quantite`) VALUES(4, 11, 6, 20);
+INSERT IGNORE INTO `tickets_produits` (`tckt_id`, `prod_id`, `tckt_prod_id`, `tckt_prod_quantite`) VALUES(5, 14, 7, 15);
+INSERT IGNORE INTO `tickets_produits` (`tckt_id`, `prod_id`, `tckt_prod_id`, `tckt_prod_quantite`) VALUES(6, 17, 8, 15);
