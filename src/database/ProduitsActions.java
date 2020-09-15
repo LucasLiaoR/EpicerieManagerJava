@@ -45,7 +45,7 @@ public class ProduitsActions {
 				int prod_id = resProduits.getInt("prod_id");
 				String prod_nom = resProduits.getString("prod_nom");
 				String prod_description = resProduits.getString("prod_description");
-				int prod_prix_vente_ttc = resProduits.getInt("prod_prix_vente_ttc");
+				float prod_prix_vente_ttc = resProduits.getInt("prod_prix_vente_ttc");
 				int prod_quantite_min = resProduits.getInt("prod_quantite_min");
 				float prod_quantite_stock = resProduits.getFloat("prod_quantite_stock");
 				String prod_unite = resProduits.getString("prod_unite");
@@ -241,7 +241,7 @@ public class ProduitsActions {
 			
 			String statut;
 			
-			if (produit.getProd_quantite_stock() + montantModif < produit.getProd_quantite_min())
+			if (produit.getProd_quantite_stock() + montantModif < produit.getProd_quantite_min() && (produit.getProd_quantite_stock() + montantModif) != 0)
 			{
 				statut = "A commander";
 			}
@@ -276,7 +276,7 @@ public class ProduitsActions {
 			
 			String statut;
 			
-			if (produit.getProd_quantite_stock() + montantModif < produit.getProd_quantite_min())
+			if (produit.getProd_quantite_stock() + montantModif < produit.getProd_quantite_min() && (produit.getProd_quantite_stock() + montantModif) != 0)
 			{
 				statut = "A commander";
 			}

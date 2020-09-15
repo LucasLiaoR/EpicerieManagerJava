@@ -119,6 +119,39 @@ public class ModificationQuantiteStockPanel {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
+				// Il faut sélectionner un produit dans jTableQuantitePrix
+				if(jTableQuantitePrix.getSelectedRow() == -1) {
+					JOptionPane.showMessageDialog(panel, "Aucun produit choisi. Il faut cliquer sur un produit dans la table à droit pour faire le choix !", "Attention", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				// Vérifié si c'est une valeur numérique
+				float quantiteInputFloat;
+				float prix;
+				try {
+					quantiteInputFloat = Float.parseFloat(ModifQuantiteProduit_Quantite.getText());
+					prix = Float.parseFloat(ModifierQuantiteProduitPrix.getText());
+				} catch (NumberFormatException e) {
+					JOptionPane.showMessageDialog(null, "Il faut saisir les valeurs numériques pour la quantité et le prix !", "Attention !",JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				// Le prix doit etre positive
+				if(prix <= 0) {
+					JOptionPane.showMessageDialog(null, "Il faut que le prix soit positive !", "Attention !",JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				// La quantite en stock ne peut pas être negative
+				String quantiteStockString = jTableQuantitePrix
+						.getValueAt(jTableQuantitePrix.getSelectedRow(), jTableQuantitePrix.getColumn("Stock").getModelIndex())
+						.toString();
+				float quantiteStockFloat = Float.parseFloat(quantiteStockString);
+				if(quantiteInputFloat + quantiteStockFloat < 0) {
+					JOptionPane.showMessageDialog(null, "La quantié en stock ne peut pas être négative. Il faut que la quantité à déduire soit inférieure à la quantité en stock.", "Attention !",JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
 				if (listeProduitRecherche.getSelectedValue() != null && !ModifQuantiteProduit_Quantite.getText().equals("") && !ModifierQuantiteProduitPrix.getText().equals(""))
 				{
 					valeurSelected = listeProduitRecherche.getSelectedValue().toString();
