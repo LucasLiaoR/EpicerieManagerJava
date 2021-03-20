@@ -1,5 +1,5 @@
 # EpicerieManagerJava
-Un système POS (Point of Sale) pour des épicerie en Java.
+Un système POS qui permet de connecter un utilisateur, de gérer les produits vendus par le commerce, le stock (entrées, sorties, modifications) et les encaissements.
 
 
 
